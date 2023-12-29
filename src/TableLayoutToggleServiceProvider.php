@@ -91,7 +91,7 @@ class TableLayoutToggleServiceProvider extends PackageServiceProvider
         Livewire::component('table-layout-toggle-action', Components\TableLayoutToggleAction::class);
 
         // Testing
-        Testable::mixin(new TestsTableLayoutToggle());
+        // Testable::mixin(new TestsTableLayoutToggle());
     }
 
     protected function getAssetPackageName(): ?string
