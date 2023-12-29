@@ -81,7 +81,7 @@ trait HasToggleableTable
 
     protected function getTableHookNameFromFilamentClassType(): string
     {
-        return match(true) {
+        return match (true) {
             $this->isResourceFilamentClass() => 'panels::resource.pages.list-records.table.before',
             $this->isRelationManagerFilamentClass() => 'panels::resource.relation-manager.before',
             $this->isTableWidgetFilamentClass() => 'widgets::table-widget.start',
