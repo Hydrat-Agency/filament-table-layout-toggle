@@ -11,6 +11,8 @@ This package brings a simple toggle button to Filament tables, allowing users to
 
 Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toogle feature first. This package is simply an extraction of the feature, so it can be used in any project.
 
+![screen-capture.mov](readme/screen-capture.mov)
+
 ## Installation
 
 You can install the package via composer:
