@@ -11,7 +11,10 @@ This package brings a simple toggle button to Filament tables, allowing users to
 
 Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toogle feature first. This package is simply an extraction of the feature, so it can be used in any project.
 
-https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/80864bbc-73c0-41c8-aa36-6900cf5967e0
+
+
+https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b177a0fd-d263-4054-a05f-e6a597554d0f
+
 
 
 ## Installation
