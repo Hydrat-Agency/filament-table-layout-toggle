@@ -1,15 +1,18 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Hydrat\TableLayoutToggle;
 
-use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Filament\Contracts\Plugin;
+use Hydrat\TableLayoutToggle\Concerns\ConfigurePlugin;
 
-class SkeletonPlugin implements Plugin
+class TableLayoutTogglePlugin implements Plugin
 {
+    use ConfigurePlugin;
+
     public function getId(): string
     {
-        return 'skeleton';
+        return 'filament-table-layout-toggle';
     }
 
     public function register(Panel $panel): void

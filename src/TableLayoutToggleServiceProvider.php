@@ -1,26 +1,27 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Hydrat\TableLayoutToggle;
 
-use Filament\Support\Assets\AlpineComponent;
-use Filament\Support\Assets\Asset;
-use Filament\Support\Assets\Css;
+use Livewire\Livewire;
 use Filament\Support\Assets\Js;
-use Filament\Support\Facades\FilamentAsset;
-use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Asset;
 use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
+use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Assets\AlpineComponent;
+use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
-use VendorName\Skeleton\Testing\TestsSkeleton;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Hydrat\TableLayoutToggle\Testing\TestsTableLayoutToggle;
+use Hydrat\TableLayoutToggle\Commands\TableLayoutToggleCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class TableLayoutToggleServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'skeleton';
+    public static string $name = 'table-layout-toggle';
 
-    public static string $viewNamespace = 'skeleton';
+    public static string $viewNamespace = 'table-layout-toggle';
 
     public function configurePackage(Package $package): void
     {
@@ -34,9 +35,9 @@ class SkeletonServiceProvider extends PackageServiceProvider
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub(':vendor_slug/:package_slug');
+                    // ->publishMigrations()
+                    // ->askToRunMigrations()
+                    ->askToStarRepoOnGitHub('hydrat/filament-table-layout-toggle');
             });
 
         $configFileName = $package->shortName();
@@ -82,18 +83,20 @@ class SkeletonServiceProvider extends PackageServiceProvider
         if (app()->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
                 $this->publishes([
-                    $file->getRealPath() => base_path("stubs/skeleton/{$file->getFilename()}"),
-                ], 'skeleton-stubs');
+                    $file->getRealPath() => base_path("stubs/filament-table-layout-toggle/{$file->getFilename()}"),
+                ], 'filament-table-layout-toggle-stubs');
             }
         }
 
+        Livewire::component('table-layout-toggle-action', Components\TableLayoutToggleAction::class);
+
         // Testing
-        Testable::mixin(new TestsSkeleton());
+        Testable::mixin(new TestsTableLayoutToggle());
     }
 
     protected function getAssetPackageName(): ?string
     {
-        return ':vendor_slug/:package_slug';
+        return 'hydrat/filament-table-layout-toggle';
     }
 
     /**
@@ -102,9 +105,9 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            // AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
-            Css::make('skeleton-styles', __DIR__ . '/../resources/dist/skeleton.css'),
-            Js::make('skeleton-scripts', __DIR__ . '/../resources/dist/skeleton.js'),
+            // AlpineComponent::make('filament-table-layout-toggle', __DIR__ . '/../resources/dist/components/filament-table-layout-toggle.js'),
+            Css::make('filament-table-layout-toggle-styles', __DIR__ . '/../resources/dist/filament-table-layout-toggle.css'),
+            Js::make('filament-table-layout-toggle-scripts', __DIR__ . '/../resources/dist/filament-table-layout-toggle.js'),
         ];
     }
 
@@ -114,7 +117,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            SkeletonCommand::class,
+            // TableLayoutToggleCommand::class,
         ];
     }
 
@@ -148,7 +151,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_skeleton_table',
+            // 'create_filament-table-layout-toggle_table',
         ];
     }
 }

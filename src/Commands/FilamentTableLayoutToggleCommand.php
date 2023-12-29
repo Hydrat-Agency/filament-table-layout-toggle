@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Hydrat\TableLayoutToggle\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class TableLayoutToggleCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'filament-table-layout-toggle';
 
     public $description = 'My command';
 
