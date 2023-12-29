@@ -106,8 +106,8 @@ class TableLayoutToggleServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('filament-table-layout-toggle', __DIR__ . '/../resources/dist/components/filament-table-layout-toggle.js'),
-            Css::make('filament-table-layout-toggle-styles', __DIR__.'/../resources/dist/filament-table-layout-toggle.css'),
-            Js::make('filament-table-layout-toggle-scripts', __DIR__.'/../resources/dist/filament-table-layout-toggle.js'),
+            // Css::make('filament-table-layout-toggle-styles', __DIR__.'/../resources/dist/filament-table-layout-toggle.css'),
+            // Js::make('filament-table-layout-toggle-scripts', __DIR__.'/../resources/dist/filament-table-layout-toggle.js'),
         ];
     }
 
