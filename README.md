@@ -32,28 +32,32 @@ First, register the plugin on your Filament panel :
 ```php
 use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
 
-->plugins([
-  TableLayoutTogglePlugin::make()
-      ->persistLayoutInLocalStorage(true) // allow user to keep his layout preference in his local storage
-      ->shareLayoutBetweenPages(false) // allow all tables to share the layout option, works only if persistLayoutInLocalStorage is true
-      ->displayToggleAction() // used to display the toogle button automatically, on the desired filament hook
-      ->listLayoutButtonIcon('heroicon-o-list-bullet')
-      ->gridLayoutButtonIcon('heroicon-o-squares-2x2'),
-])
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->plugins([
+            TableLayoutTogglePlugin::make()
+                ->persistLayoutInLocalStorage(true) // allow user to keep his layout preference in his local storage
+                ->shareLayoutBetweenPages(false) // allow all tables to share the layout option (requires persistLayoutInLocalStorage to be true)
+                ->displayToggleAction() // used to display the toogle button automatically, on the desired filament hook (defaults to table bar)
+                ->listLayoutButtonIcon('heroicon-o-list-bullet')
+                ->gridLayoutButtonIcon('heroicon-o-squares-2x2'),
+        ]);
+}
 ```
 
-Then, on page where you are displaying the table, you can use the following trait :
+Then, on the component containing the table (ListRecord, ManageRelatedRecords, ...), you can use the following trait :
 
 ```php
 use Hydrat\TableLayoutToggle\Concerns\HasToggleableTable;
 
 class MyListRecords extends ListRecords
 {
-  use HasToggleableTable;
+    use HasToggleableTable;
 }
 ```
 
-Finally, you need to configure your table so it sets the schema based on the selected layout. This is typically done on the resource's `table()` method :
+Finally, you need to configure your table so it dynamically sets the schema based on the selected layout. This is typically done on the resource's `table()` method :
 
 ```php
 public static function table(Table $table): Table
@@ -78,18 +82,22 @@ public static function table(Table $table): Table
             return null;
         });
 }
+
+public static function getGridTableColumns(): array;
+public static function getTableColumns(): array;
 ```
 
-If you rather use your own action or decide where it's displayed, you can first disable the automatic rendering of the toggle button :
+If you rather use your own action, you should first disable the automatic rendering of the toggle button on the plugin registration :
 
 ```php
-->plugins([
-  TableLayoutTogglePlugin::make()
-      ->displayToggleAction(false),
-])
+$panel
+    ->plugins([
+      TableLayoutTogglePlugin::make()
+          ->displayToggleAction(false),
+    ])
 ```
 
-Then, you can make use of the helper to generate the base Action or Table action :
+Then, get base `Action` or `TableAction` from the provided helper :
 
 ```php
 use Hydrat\TableLayoutToggle\Facades\TableLayoutToggle;
@@ -99,9 +107,9 @@ return $table
     ->columns(...)
     ->headerActions([
         TableLayoutToggle::getToggleViewTableAction(compact: true),
-    ])
+    ]);
 
-// As page header action :
+// As Filament page header action :
 protected function getHeaderActions(): array
 {
     return [
@@ -111,13 +119,6 @@ protected function getHeaderActions(): array
     ];
 }
 
-```
-
-```php
-## Testing
-
-```bash
-composer test
 ```
 
 ## Changelog
