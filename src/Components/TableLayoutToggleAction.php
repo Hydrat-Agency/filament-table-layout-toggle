@@ -2,16 +2,16 @@
 
 namespace Hydrat\TableLayoutToggle\Components;
 
-use Livewire\Component;
 use Filament\Actions\Action;
-use Illuminate\Contracts\View\View;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Forms\Contracts\HasForms;
 use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
+use Illuminate\Contracts\View\View;
+use Livewire\Component;
 
-class TableLayoutToggleAction extends Component implements HasForms, HasActions
+class TableLayoutToggleAction extends Component implements HasActions, HasForms
 {
     use InteractsWithActions;
     use InteractsWithForms;

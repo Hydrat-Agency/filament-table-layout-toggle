@@ -2,15 +2,15 @@
 
 namespace Hydrat\TableLayoutToggle\Concerns;
 
+use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Facades\FilamentView;
+use Filament\Tables\Actions\Action as TableAction;
 use Filament\Widgets\TableWidget;
+use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Blade;
-use Filament\Resources\Pages\ListRecords;
-use Filament\Support\Facades\FilamentView;
-use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables\Actions\Action as TableAction;
-use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
-use Filament\Resources\RelationManagers\RelationManager;
 
 trait HasToggleableTable
 {
@@ -41,7 +41,7 @@ trait HasToggleableTable
 
         $saveAsName = $sharedPersistedName
             ? 'tableLayoutView'
-            : 'tableLayoutView::' . md5(url()->current());
+            : 'tableLayoutView::'.md5(url()->current());
 
         FilamentView::registerRenderHook(
             'panels::resource.pages.list-records.table.after',

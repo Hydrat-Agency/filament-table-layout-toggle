@@ -2,8 +2,8 @@
 
 namespace Hydrat\TableLayoutToggle;
 
-use Filament\Panel;
 use Filament\Contracts\Plugin;
+use Filament\Panel;
 use Hydrat\TableLayoutToggle\Concerns\ConfigurePlugin;
 
 class TableLayoutTogglePlugin implements Plugin

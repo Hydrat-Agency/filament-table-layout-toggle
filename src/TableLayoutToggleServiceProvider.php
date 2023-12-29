@@ -2,20 +2,20 @@
 
 namespace Hydrat\TableLayoutToggle;
 
-use Livewire\Livewire;
-use Filament\Support\Assets\Js;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Asset;
-use Illuminate\Filesystem\Filesystem;
-use Spatie\LaravelPackageTools\Package;
-use Filament\Support\Facades\FilamentIcon;
-use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Assets\AlpineComponent;
-use Livewire\Features\SupportTesting\Testable;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
-use Hydrat\TableLayoutToggle\Testing\TestsTableLayoutToggle;
+use Filament\Support\Assets\Asset;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Facades\FilamentIcon;
 use Hydrat\TableLayoutToggle\Commands\TableLayoutToggleCommand;
+use Hydrat\TableLayoutToggle\Testing\TestsTableLayoutToggle;
+use Illuminate\Filesystem\Filesystem;
+use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class TableLayoutToggleServiceProvider extends PackageServiceProvider
 {
@@ -81,7 +81,7 @@ class TableLayoutToggleServiceProvider extends PackageServiceProvider
 
         // Handle Stubs
         if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
+            foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/filament-table-layout-toggle/{$file->getFilename()}"),
                 ], 'filament-table-layout-toggle-stubs');
@@ -106,8 +106,8 @@ class TableLayoutToggleServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('filament-table-layout-toggle', __DIR__ . '/../resources/dist/components/filament-table-layout-toggle.js'),
-            Css::make('filament-table-layout-toggle-styles', __DIR__ . '/../resources/dist/filament-table-layout-toggle.css'),
-            Js::make('filament-table-layout-toggle-scripts', __DIR__ . '/../resources/dist/filament-table-layout-toggle.js'),
+            Css::make('filament-table-layout-toggle-styles', __DIR__.'/../resources/dist/filament-table-layout-toggle.css'),
+            Js::make('filament-table-layout-toggle-scripts', __DIR__.'/../resources/dist/filament-table-layout-toggle.js'),
         ];
     }
 
