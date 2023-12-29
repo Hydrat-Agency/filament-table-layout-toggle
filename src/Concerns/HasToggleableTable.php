@@ -6,7 +6,6 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Facades\FilamentView;
-use Filament\Tables\Actions\Action as TableAction;
 use Filament\Widgets\TableWidget;
 use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
 use Illuminate\Contracts\View\View;
@@ -44,7 +43,7 @@ trait HasToggleableTable
             : 'tableLayoutView::'.md5(url()->current());
 
         FilamentView::registerRenderHook(
-            'panels::resource.pages.list-records.table.after',
+            $this->getTableHookNameFromFilamentClassType(),
             fn (): View => view('table-layout-toggle::layout-view-persister', compact('saveAsName')),
             scopes: HasToggleableTable::class,
         );
@@ -80,58 +79,34 @@ trait HasToggleableTable
         return $this->layoutView;
     }
 
-    protected function getHookName(): string
+    protected function getTableHookNameFromFilamentClassType(): string
     {
-        if ($this->isRelationManager()) {
-            return 'panels::resource.relation-manager.after';
-        }
-
-        if ($this->isTableWidget()) {
-            return 'widgets::table-widget.end';
-        }
-
-        if ($this->isManageRelatedRecords()) {
-            return 'panels::resource.pages.manage-related-records.table.after';
-        }
-
-        return 'panels::resource.pages.list-records.table.after';
+        return match(true) {
+            $this->isResourceFilamentClass() => 'panels::resource.pages.list-records.table.before',
+            $this->isRelationManagerFilamentClass() => 'panels::resource.relation-manager.before',
+            $this->isTableWidgetFilamentClass() => 'widgets::table-widget.start',
+            $this->isManageRelatedRecordsFilamentClass() => 'panels::resource.pages.manage-related-records.table.before',
+            default => 'panels::resource.pages.list-records.table.before',
+        };
     }
 
-    protected function isResource(): bool
+    protected function isResourceFilamentClass(): bool
     {
         return is_subclass_of($this, ListRecords::class);
     }
 
-    protected function isRelationManager(): bool
+    protected function isRelationManagerFilamentClass(): bool
     {
         return is_subclass_of($this, RelationManager::class);
     }
 
-    protected function isTableWidget(): bool
+    protected function isTableWidgetFilamentClass(): bool
     {
         return is_subclass_of($this, TableWidget::class);
     }
 
-    protected function isManageRelatedRecords(): bool
+    protected function isManageRelatedRecordsFilamentClass(): bool
     {
         return is_subclass_of($this, ManageRelatedRecords::class);
-    }
-
-    public function getToggleTableAction(bool $compact = true): TableAction
-    {
-        return TableAction::make('toggle-table-view-gt')
-            ->color('gray')
-            ->hiddenLabel(true)
-            ->icon(function ($livewire): string {
-                return $livewire->layoutView === 'grid'
-                    ? TableLayoutTogglePlugin::get()->getListLayoutButtonIcon()
-                    : TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon();
-            })
-            ->action(function ($livewire): void {
-                $livewire->dispatch('changeLayoutView');
-            })
-            ->extraAttributes([
-                'class' => $compact ? '!p-0 !m-0 border-none' : '',
-            ]);
     }
 }
