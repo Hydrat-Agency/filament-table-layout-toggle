@@ -15,7 +15,7 @@ trait ConfigurePlugin
 
     protected string|Closure $listLayoutButtonIcon = 'heroicon-o-list-bullet';
 
-    protected string|Closure $gridLayoutButtonIcon = 'heroicon-o-list-bullet';
+    protected string|Closure $gridLayoutButtonIcon = 'heroicon-o-squares-2x2';
 
     protected false|string|Closure $toggleActionPosition = 'tables::toolbar.search.after';
 

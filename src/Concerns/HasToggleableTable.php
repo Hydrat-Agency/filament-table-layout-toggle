@@ -9,18 +9,22 @@ use Filament\Support\Facades\FilamentView;
 use Filament\Widgets\TableWidget;
 use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Blade;
 
 trait HasToggleableTable
 {
-    public string $layoutView = 'grid';
+    public $layoutView;
 
     public function initializeHasToggleableTable()
     {
-        return $this->listeners = $this->listeners + [
+        $this->listeners = $this->listeners + [
             'changeLayoutView' => 'changeLayoutView',
             'layoutViewChanged' => '$refresh',
         ];
+    }
+
+    public function updatedLayoutView($value)
+    {
+        $this->dispatch('layoutViewChanged', $value);
     }
 
     public function bootedHasToggleableTable()
@@ -44,8 +48,8 @@ trait HasToggleableTable
 
         FilamentView::registerRenderHook(
             $this->getTableHookNameFromFilamentClassType(),
-            fn (): View => view('table-layout-toggle::layout-view-persister', compact('saveAsName')),
-            scopes: HasToggleableTable::class,
+            fn (): View => view('table-layout-toggle::layout-view-persister', ['saveAsName' => $saveAsName]),
+            scopes: static::class,
         );
     }
 
@@ -53,40 +57,51 @@ trait HasToggleableTable
     {
         FilamentView::registerRenderHook(
             $filamentHook,
-            fn (): string => Blade::render('@livewire(\'\')'),
-            scopes: HasToggleableTable::class,
+            fn (): View => view('table-layout-toggle::toggle-action', [
+                'gridIcon' => TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon(),
+                'listIcon' => TableLayoutTogglePlugin::get()->getListLayoutButtonIcon(),
+            ]),
+            scopes: static::class,
         );
     }
 
     public function changeLayoutView(): void
     {
-        $this->layoutView = $this->layoutView === 'list' ? 'grid' : 'list';
+        $this->layoutView = $this->getLayoutView() === 'list'
+            ? 'grid'
+            : 'list';
+
         $this->dispatch('layoutViewChanged', $this->layoutView);
     }
 
     public function isGridLayout(): bool
     {
-        return $this->layoutView === 'grid';
+        return $this->getLayoutView() === 'grid';
     }
 
     public function isListLayout(): bool
     {
-        return $this->layoutView === 'list';
+        return $this->getLayoutView() === 'list';
     }
 
     public function getLayoutView(): string
     {
-        return $this->layoutView;
+        return $this->layoutView ?? $this->getDefaultLayoutView();
+    }
+
+    public function getDefaultLayoutView(): string
+    {
+        return 'list';
     }
 
     protected function getTableHookNameFromFilamentClassType(): string
     {
         return match (true) {
-            $this->isResourceFilamentClass() => 'panels::resource.pages.list-records.table.before',
-            $this->isRelationManagerFilamentClass() => 'panels::resource.relation-manager.before',
+            $this->isResourceFilamentClass() => 'panels::resource.pages.list-records.table.after',
+            $this->isRelationManagerFilamentClass() => 'panels::resource.relation-manager.after',
             $this->isTableWidgetFilamentClass() => 'widgets::table-widget.start',
-            $this->isManageRelatedRecordsFilamentClass() => 'panels::resource.pages.manage-related-records.table.before',
-            default => 'panels::resource.pages.list-records.table.before',
+            $this->isManageRelatedRecordsFilamentClass() => 'panels::resource.pages.manage-related-records.table.after',
+            default => 'panels::resource.pages.list-records.table.after',
         };
     }
 
