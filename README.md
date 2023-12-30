@@ -6,12 +6,12 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/hydrat/filament-table-layout-toggle.svg?style=flat-square)](https://packagist.org/packages/hydrat/filament-table-layout-toggle)
 
 
-This package brings a simple toggle button to Filament tables, allowing end users to switch between Grid and Table layout on tables. This approach allows mobile users to benefit from the Grid layout, while desktop users can still benefit from Table layout features, such as the table headers.
+This package brings a simple toggle button to Filament tables, allowing end users to switch between Grid and Table layouts on tables. This approach allows mobile users to benefit from the Grid layout, while desktop users can still benefit from Table layout features, such as the table headers.
 
 https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b177a0fd-d263-4054-a05f-e6a597554d0f
 
 
-Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toggle feature first on their package. This package is mainly an extraction of the feature, so it can be used in any project, and some other adding such as sacing the selected layout in the local storage.
+Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toggle feature first on their package. This package is mainly an extraction of the feature so that it can be used in any project, and some other adding such as saving the selected layout in the local storage.
 
 
 ## Installation
