@@ -13,6 +13,10 @@ This package brings a simple toggle button to Filament tables, allowing end user
 
 https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b177a0fd-d263-4054-a05f-e6a597554d0f
 
+![screenshot_table](https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/72035a42-4439-4317-9266-e4a6cd1a757a)
+![screenshot_grid](https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/56d0ecc8-07b9-459a-b045-c5916adfa703)
+
+
 ## Installation
 
 You can install the package via composer:
