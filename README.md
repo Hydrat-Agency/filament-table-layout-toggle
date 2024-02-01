@@ -74,7 +74,7 @@ public static function table(Table $table): Table
         ->columns(
             $livewire->isGridLayout()
                 ? static::getGridTableColumns()
-                : static::getTableColumns(),
+                : static::getListTableColumns(),
         )
         ->contentGrid(
             fn () => $livewire->isListLayout()
@@ -88,7 +88,7 @@ public static function table(Table $table): Table
 }
 
 public static function getGridTableColumns(): array;
-public static function getTableColumns(): array;
+public static function getListTableColumns(): array;
 ```
 
 If you rather use your own action instead of the default one, you should first disable it on the plugin registration :
