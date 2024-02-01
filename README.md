@@ -77,7 +77,7 @@ public static function table(Table $table): Table
                 : static::getTableColumns(),
         )
         ->contentGrid(
-            fn () => $livewire->isTableLayout()
+            fn () => $livewire->isListLayout()
                 ? null
                 : [
                     'md' => 2,
