@@ -2,13 +2,13 @@
 
 namespace Hydrat\TableLayoutToggle\Concerns;
 
-use Filament\Widgets\TableWidget;
-use Illuminate\Contracts\View\View;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Support\Facades\FilamentView;
-use Hydrat\TableLayoutToggle\Support\Config;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Facades\FilamentView;
+use Filament\Widgets\TableWidget;
+use Hydrat\TableLayoutToggle\Support\Config;
+use Illuminate\Contracts\View\View;
 
 trait HasToggleableTable
 {
