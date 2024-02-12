@@ -3,9 +3,9 @@
 namespace Hydrat\TableLayoutToggle\Resources;
 
 use Filament\Actions\Action;
-use Hydrat\TableLayoutToggle\Support\Config;
-use Hydrat\TableLayoutToggle\Concerns\HasToggleableTable;
 use Filament\Resources\Pages\ListRecords as FilamentListRecords;
+use Hydrat\TableLayoutToggle\Concerns\HasToggleableTable;
+use Hydrat\TableLayoutToggle\Support\Config;
 
 class ListRecords extends FilamentListRecords
 {

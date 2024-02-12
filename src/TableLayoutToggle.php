@@ -3,8 +3,8 @@
 namespace Hydrat\TableLayoutToggle;
 
 use Filament\Actions\Action;
-use Hydrat\TableLayoutToggle\Support\Config;
 use Filament\Tables\Actions\Action as TableAction;
+use Hydrat\TableLayoutToggle\Support\Config;
 
 class TableLayoutToggle
 {
