@@ -26,7 +26,7 @@ class Config
             return TableLayoutTogglePlugin::get()->shouldPersistLayoutInLocalStorage();
         }
 
-        return config('table-layout-toggle.local_storage', true);
+        return config('table-layout-toggle.persist.local_storage', true);
     }
 
     public static function shouldShareLayoutBetweenPages(): bool
@@ -35,7 +35,7 @@ class Config
             return TableLayoutTogglePlugin::get()->shouldShareLayoutBetweenPages();
         }
 
-        return config('table-layout-toggle.share_between_pages', false);
+        return config('table-layout-toggle.persist.share_between_pages', false);
     }
 
     public static function toggleActionEnabled(): bool
