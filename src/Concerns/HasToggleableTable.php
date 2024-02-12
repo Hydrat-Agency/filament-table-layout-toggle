@@ -2,13 +2,13 @@
 
 namespace Hydrat\TableLayoutToggle\Concerns;
 
+use Filament\Widgets\TableWidget;
+use Illuminate\Contracts\View\View;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Facades\FilamentView;
+use Hydrat\TableLayoutToggle\Support\Config;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Support\Facades\FilamentView;
-use Filament\Widgets\TableWidget;
-use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
-use Illuminate\Contracts\View\View;
 
 trait HasToggleableTable
 {
@@ -29,22 +29,27 @@ trait HasToggleableTable
 
     public function bootedHasToggleableTable()
     {
-        if (TableLayoutTogglePlugin::get()->shouldPersistLayoutInLocalStorage()) {
+        if (Config::shouldPersistLayoutInLocalStorage()) {
             $this->registerLayoutViewPersisterHook();
         }
 
-        if (($filamentHook = TableLayoutTogglePlugin::get()->toggleActionPosition()) !== false) {
+        if (Config::toggleActionEnabled() && ($filamentHook = Config::toggleActionPosition())) {
             $this->registerLayoutViewToogleActionHook($filamentHook);
         }
     }
 
-    protected function registerLayoutViewPersisterHook()
+    protected function persistToggleStatusName(): string
     {
-        $sharedPersistedName = TableLayoutTogglePlugin::get()->shouldShareLayoutBetweenPages();
+        $sharedPersistedName = Config::shouldShareLayoutBetweenPages();
 
-        $saveAsName = $sharedPersistedName
+        return $sharedPersistedName
             ? 'tableLayoutView'
             : 'tableLayoutView::'.md5(url()->current());
+    }
+
+    protected function registerLayoutViewPersisterHook()
+    {
+        $saveAsName = $this->persistToggleStatusName();
 
         FilamentView::registerRenderHook(
             $this->getTableHookNameFromFilamentClassType(),
@@ -58,8 +63,8 @@ trait HasToggleableTable
         FilamentView::registerRenderHook(
             $filamentHook,
             fn (): View => view('table-layout-toggle::toggle-action', [
-                'gridIcon' => TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon(),
-                'listIcon' => TableLayoutTogglePlugin::get()->getListLayoutButtonIcon(),
+                'gridIcon' => Config::getGridLayoutButtonIcon(),
+                'listIcon' => Config::getListLayoutButtonIcon(),
             ]),
             scopes: static::class,
         );
@@ -91,7 +96,7 @@ trait HasToggleableTable
 
     public function getDefaultLayoutView(): string
     {
-        return 'list';
+        return Config::defaultLayout();
     }
 
     protected function getTableHookNameFromFilamentClassType(): string

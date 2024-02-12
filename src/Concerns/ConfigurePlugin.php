@@ -9,6 +9,8 @@ trait ConfigurePlugin
 {
     use EvaluatesClosures;
 
+    protected string|Closure $defaultLayout = 'list';
+
     protected bool|Closure $persistLayoutInLocalStorage = true;
 
     protected bool|Closure $shareLayoutBetweenPages = false;
@@ -17,7 +19,16 @@ trait ConfigurePlugin
 
     protected string|Closure $gridLayoutButtonIcon = 'heroicon-o-squares-2x2';
 
-    protected false|string|Closure $toggleActionPosition = 'tables::toolbar.search.after';
+    protected bool|Closure $toggleActionEnabled = true;
+
+    protected string|Closure $toggleActionPosition = 'tables::toolbar.search.after';
+
+    public function setDefaultLayout(string|Closure $defaultLayout = 'list'): static
+    {
+        $this->defaultLayout = $defaultLayout;
+
+        return $this;
+    }
 
     public function persistLayoutInLocalStorage(bool|Closure $condition = true): static
     {
@@ -47,11 +58,23 @@ trait ConfigurePlugin
         return $this;
     }
 
-    public function displayToggleAction(false|string|Closure $filamentHook = 'tables::toolbar.search.after'): static
+    public function displayToggleAction(bool|Closure $enabled = true): static
+    {
+        $this->toggleActionEnabled = $enabled;
+
+        return $this;
+    }
+
+    public function toggleActionHook(string|Closure $filamentHook = 'tables::toolbar.search.after'): static
     {
         $this->toggleActionPosition = $filamentHook;
 
         return $this;
+    }
+
+    public function defaultLayout(): string
+    {
+        return $this->evaluate($this->defaultLayout);
     }
 
     public function shouldPersistLayoutInLocalStorage(): bool
@@ -74,7 +97,12 @@ trait ConfigurePlugin
         return $this->evaluate($this->gridLayoutButtonIcon);
     }
 
-    public function toggleActionPosition(): false|string
+    public function toggleActionEnabled(): bool
+    {
+        return $this->evaluate($this->toggleActionEnabled);
+    }
+
+    public function toggleActionPosition(): string
     {
         return $this->evaluate($this->toggleActionPosition);
     }

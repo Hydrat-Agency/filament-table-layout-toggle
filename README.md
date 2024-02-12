@@ -31,7 +31,19 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-table-layout-toggle-views"
 ```
 
+If you are using this package outside of filament panels (standalone tables), you should publish the configuration file :
+
+```bash
+php artisan vendor:publish --tag="filament-table-layout-toggle-config"
+```
+
+If using panels, this configuration file **WILL NOT** be read by the plugin, as the configuration happens on the plugin registration itself.
+
 ## Usage
+
+Please chose the appropriate section for your use case (Panels or standalone tables).
+
+### Panels
 
 First, register the plugin on your Filament panel :
 
@@ -43,16 +55,18 @@ public function panel(Panel $panel): Panel
     return $panel
         ->plugins([
             TableLayoutTogglePlugin::make()
+                ->defaultLayout('grid') // default layout for user seeing the table for the first time
                 ->persistLayoutInLocalStorage(true) // allow user to keep his layout preference in his local storage
                 ->shareLayoutBetweenPages(false) // allow all tables to share the layout option (requires persistLayoutInLocalStorage to be true)
-                ->displayToggleAction() // used to display the toogle button automatically, on the desired filament hook (defaults to table bar)
+                ->displayToggleAction() // used to display the toggle action button automatically
+                ->toggleActionHook('tables::toolbar.search.after') // chose the Filament view hook to render the button on
                 ->listLayoutButtonIcon('heroicon-o-list-bullet')
                 ->gridLayoutButtonIcon('heroicon-o-squares-2x2'),
         ]);
 }
 ```
 
-Then, on the component containing the table (ListRecord, ManageRelatedRecords, ...), you can use the following trait :
+Then, on the component containing the table (ListRecord, ManageRelatedRecords, ...), you can use the `HasToggleableTable` trait :
 
 ```php
 use Hydrat\TableLayoutToggle\Concerns\HasToggleableTable;
@@ -90,6 +104,56 @@ public static function table(Table $table): Table
 public static function getGridTableColumns(): array;
 public static function getListTableColumns(): array;
 ```
+
+### Standalone tables
+
+You can manage the plugin settings via the published configuration file.
+The options are self documented, and should be pretty straightforward to use.
+
+Then, on the component containing the table, you can use the `HasToggleableTable` trait :
+
+```php
+namespace App\Livewire\Users;
+
+use Hydrat\TableLayoutToggle\Concerns\HasToggleableTable;
+
+class ListUsers extends Component implements HasForms, HasTable, HasActions
+{
+    use InteractsWithTable;
+    use InteractsWithActions;
+    use InteractsWithForms;
+    use HasToggleableTable; // <-- Add this line
+}
+```
+
+Finally, you need to configure your table so it dynamically sets the schema based on the selected layout. This is typically done on the component's `table()` method :
+
+```php
+public function table(Table $table): Table
+{
+    return $table
+        ->columns(
+            $this->isGridLayout()
+                ? $this->getGridTableColumns()
+                : $this->getListTableColumns(),
+        )
+        ->contentGrid(
+            fn () => $this->isListLayout()
+                ? null
+                : [
+                    'md' => 2,
+                    'lg' => 3,
+                    'xl' => 4,
+                ];
+        );
+}
+
+public function getGridTableColumns(): array;
+public function getListTableColumns(): array;
+```
+
+
+### Using own action
 
 If you rather use your own action instead of the default one, you should first disable it on the plugin registration :
 
