@@ -29,13 +29,38 @@ trait HasToggleableTable
 
     public function bootedHasToggleableTable()
     {
-        if (Config::shouldPersistLayoutInLocalStorage()) {
+        if ($this->persistToggleEnabled()) {
             $this->registerLayoutViewPersisterHook();
         }
 
         if (Config::toggleActionEnabled() && ($filamentHook = Config::toggleActionPosition())) {
             $this->registerLayoutViewToogleActionHook($filamentHook);
         }
+    }
+
+    protected function persistToggleEnabled(): bool
+    {
+        return Config::shouldPersistLayoutInLocalStorage();
+    }
+
+    public function getDefaultLayoutView(): string
+    {
+        return Config::defaultLayout();
+    }
+
+    public function isGridLayout(): bool
+    {
+        return $this->getLayoutView() === 'grid';
+    }
+
+    public function isListLayout(): bool
+    {
+        return $this->getLayoutView() === 'list';
+    }
+
+    public function getLayoutView(): string
+    {
+        return $this->layoutView ?? $this->getDefaultLayoutView();
     }
 
     protected function persistToggleStatusName(): string
@@ -70,10 +95,10 @@ trait HasToggleableTable
 
     protected function renderLayoutViewPersister(): View
     {
-        $persistIsEnabled = Config::shouldPersistLayoutInLocalStorage();
-        $persistToggleStatusName = $this->persistToggleStatusName();
-
-        return view('table-layout-toggle::layout-view-persister', compact('persistToggleStatusName', 'persistIsEnabled'));
+        return view('table-layout-toggle::layout-view-persister', [
+            'persistIsEnabled' => $this->persistToggleEnabled(),
+            'persistToggleStatusName' => $this->persistToggleStatusName(),
+        ]);
     }
 
     public function changeLayoutView(): void
@@ -81,26 +106,6 @@ trait HasToggleableTable
         $this->layoutView = $this->isListLayout() ? 'grid' : 'list';
 
         $this->dispatch('layoutViewChanged', $this->layoutView);
-    }
-
-    public function isGridLayout(): bool
-    {
-        return $this->getLayoutView() === 'grid';
-    }
-
-    public function isListLayout(): bool
-    {
-        return $this->getLayoutView() === 'list';
-    }
-
-    public function getLayoutView(): string
-    {
-        return $this->layoutView ?? $this->getDefaultLayoutView();
-    }
-
-    public function getDefaultLayoutView(): string
-    {
-        return Config::defaultLayout();
     }
 
     protected function getTableHookNameFromFilamentClassType(): string

@@ -163,6 +163,33 @@ protected function getListTableColumns(): array;
 protected function getGridTableColumns(): array;
 ```
 
+### Change settings per-table
+
+Some settings can be configured per-table, such as the default layout, the layout persistence, and the persistence local storage name :
+
+```php
+namespace App\Livewire\Users;
+
+class ListUsers extends Component implements HasForms, HasTable, HasActions
+{
+    use HasToggleableTable;
+
+    public function getDefaultLayoutView(): string
+    {
+        return 'grid';
+    }
+
+    protected function persistToggleEnabled(): bool
+    {
+        return false;
+    }
+
+    protected function persistToggleStatusName(): string
+    {
+        return 'tableLayoutView::listUsersTable';
+    }
+}
+```
 
 ### Using own action
 
