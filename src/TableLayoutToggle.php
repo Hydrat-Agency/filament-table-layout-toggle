@@ -3,6 +3,7 @@
 namespace Hydrat\TableLayoutToggle;
 
 use Filament\Actions\Action;
+use Hydrat\TableLayoutToggle\Support\Config;
 use Filament\Tables\Actions\Action as TableAction;
 
 class TableLayoutToggle
@@ -14,8 +15,8 @@ class TableLayoutToggle
             ->hiddenLabel(true)
             ->icon(function ($livewire): string {
                 return $livewire->layoutView === 'grid'
-                    ? TableLayoutTogglePlugin::get()->getListLayoutButtonIcon()
-                    : TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon();
+                    ? Config::getListLayoutButtonIcon()
+                    : Config::getGridLayoutButtonIcon();
             })
             ->action(function ($livewire): void {
                 $livewire->dispatch('changeLayoutView');
@@ -32,8 +33,8 @@ class TableLayoutToggle
             ->hiddenLabel(true)
             ->icon(function ($livewire): string {
                 return $livewire->layoutView === 'grid'
-                    ? TableLayoutTogglePlugin::get()->getListLayoutButtonIcon()
-                    : TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon();
+                    ? Config::getListLayoutButtonIcon()
+                    : Config::getGridLayoutButtonIcon();
             })
             ->action(function ($livewire): void {
                 $livewire->dispatch('changeLayoutView');

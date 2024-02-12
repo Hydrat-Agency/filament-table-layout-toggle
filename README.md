@@ -28,20 +28,20 @@ composer require hydrat/filament-table-layout-toggle
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag="filament-table-layout-toggle-views"
+php artisan vendor:publish --tag="table-layout-toggle-views"
 ```
 
 If you are using this package outside of filament panels (standalone tables), you should publish the configuration file :
 
 ```bash
-php artisan vendor:publish --tag="filament-table-layout-toggle-config"
+php artisan vendor:publish --tag="table-layout-toggle-config"
 ```
 
 If using panels, this configuration file **WILL NOT** be read by the plugin, as the configuration happens on the plugin registration itself.
 
 ## Usage
 
-Please chose the appropriate section for your use case (Panels or standalone tables).
+Please chose the appropriate section for your use case (Panels or Standalone tables).
 
 ### Panels
 
@@ -66,6 +66,8 @@ public function panel(Panel $panel): Panel
 }
 ```
 
+> Please note that all those configurations are optional, and have default values, which means you can omit them if you don't need to change the default behavior.
+
 Then, on the component containing the table (ListRecord, ManageRelatedRecords, ...), you can use the `HasToggleableTable` trait :
 
 ```php
@@ -88,7 +90,7 @@ public static function table(Table $table): Table
         ->columns(
             $livewire->isGridLayout()
                 ? static::getGridTableColumns()
-                : static::getListTableColumns(),
+                : static::getListTableColumns()
         )
         ->contentGrid(
             fn () => $livewire->isListLayout()
@@ -97,18 +99,18 @@ public static function table(Table $table): Table
                     'md' => 2,
                     'lg' => 3,
                     'xl' => 4,
-                ];
+                ]
         );
 }
 
-public static function getGridTableColumns(): array;
 public static function getListTableColumns(): array;
+public static function getGridTableColumns(): array;
 ```
 
 ### Standalone tables
 
 You can manage the plugin settings via the published configuration file.
-The options are self documented, and should be pretty straightforward to use.
+The options are self-documented, and should be pretty straightforward to use.
 
 Then, on the component containing the table, you can use the `HasToggleableTable` trait :
 
@@ -126,6 +128,15 @@ class ListUsers extends Component implements HasForms, HasTable, HasActions
 }
 ```
 
+If you plan to persist the layout in the local storage, you must also change your view to include the needed assets :
+
+```blade
+[...]
+{{ $this->table }}
+
+{{ $this->renderLayoutViewPersister() }} <-- Add this line
+```
+
 Finally, you need to configure your table so it dynamically sets the schema based on the selected layout. This is typically done on the component's `table()` method :
 
 ```php
@@ -135,7 +146,7 @@ public function table(Table $table): Table
         ->columns(
             $this->isGridLayout()
                 ? $this->getGridTableColumns()
-                : $this->getListTableColumns(),
+                : $this->getListTableColumns()
         )
         ->contentGrid(
             fn () => $this->isListLayout()
@@ -144,12 +155,12 @@ public function table(Table $table): Table
                     'md' => 2,
                     'lg' => 3,
                     'xl' => 4,
-                ];
+                ]
         );
 }
 
-public function getGridTableColumns(): array;
-public function getListTableColumns(): array;
+protected function getListTableColumns(): array;
+protected function getGridTableColumns(): array;
 ```
 
 

@@ -3,9 +3,9 @@
 namespace Hydrat\TableLayoutToggle\Resources;
 
 use Filament\Actions\Action;
-use Filament\Resources\Pages\ListRecords as FilamentListRecords;
+use Hydrat\TableLayoutToggle\Support\Config;
 use Hydrat\TableLayoutToggle\Concerns\HasToggleableTable;
-use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
+use Filament\Resources\Pages\ListRecords as FilamentListRecords;
 
 class ListRecords extends FilamentListRecords
 {
@@ -19,8 +19,8 @@ class ListRecords extends FilamentListRecords
                 ->hiddenLabel(true)
                 ->icon(function ($livewire): string {
                     return $livewire->layoutView === 'grid'
-                        ? TableLayoutTogglePlugin::get()->getListLayoutButtonIcon()
-                        : TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon();
+                        ? Config::getListLayoutButtonIcon()
+                        : Config::getGridLayoutButtonIcon();
                 })
                 ->action(function ($livewire): void {
                     $livewire->dispatch('changeLayoutView');

@@ -2,14 +2,14 @@
 
 namespace Hydrat\TableLayoutToggle\Components;
 
-use Filament\Actions\Action;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use Filament\Actions\Action;
+use Illuminate\Contracts\View\View;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Actions\Contracts\HasActions;
+use Hydrat\TableLayoutToggle\Support\Config;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Actions\Concerns\InteractsWithActions;
 
 class TableLayoutToggleAction extends Component implements HasActions, HasForms
 {
@@ -23,8 +23,8 @@ class TableLayoutToggleAction extends Component implements HasActions, HasForms
             ->hiddenLabel(true)
             ->icon(function ($livewire): string {
                 return $livewire->layoutView === 'grid'
-                    ? TableLayoutTogglePlugin::get()->getListLayoutButtonIcon()
-                    : TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon();
+                    ? Config::getListLayoutButtonIcon()
+                    : Config::getGridLayoutButtonIcon();
             })
             ->action(function ($livewire): void {
                 $livewire->dispatch('changeLayoutView');

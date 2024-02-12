@@ -49,11 +49,9 @@ trait HasToggleableTable
 
     protected function registerLayoutViewPersisterHook()
     {
-        $saveAsName = $this->persistToggleStatusName();
-
         FilamentView::registerRenderHook(
             $this->getTableHookNameFromFilamentClassType(),
-            fn (): View => view('table-layout-toggle::layout-view-persister', ['saveAsName' => $saveAsName]),
+            fn (): View => $this->renderLayoutViewPersister(),
             scopes: static::class,
         );
     }
@@ -70,11 +68,17 @@ trait HasToggleableTable
         );
     }
 
+    protected function renderLayoutViewPersister(): View
+    {
+        $persistIsEnabled = Config::shouldPersistLayoutInLocalStorage();
+        $persistToggleStatusName = $this->persistToggleStatusName();
+
+        return view('table-layout-toggle::layout-view-persister', compact('persistToggleStatusName', 'persistIsEnabled'));
+    }
+
     public function changeLayoutView(): void
     {
-        $this->layoutView = $this->getLayoutView() === 'list'
-            ? 'grid'
-            : 'list';
+        $this->layoutView = $this->isListLayout() ? 'grid' : 'list';
 
         $this->dispatch('layoutViewChanged', $this->layoutView);
     }
