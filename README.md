@@ -107,6 +107,35 @@ public static function getListTableColumns(): array;
 public static function getGridTableColumns(): array;
 ```
 
+Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.  
+
+```php
+public static function getGridTableColumns(): array
+{
+    return [
+        // Make sure to stack your columns together
+        Tables\Columns\Layout\Stack::make([
+
+            Tables\Columns\TextColumn::make('status')->badge(),
+
+            // You may group columns together using the Split layout, so they are displayed side by side
+            Tables\Columns\Layout\Split::make([
+                Tables\Columns\TextColumn::make('customer')
+                    ->description(__('Customer'), position: 'above')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('owner.name')
+                    ->description(__('Owner'), position: 'above')
+                    ->searchable(),
+            ]),
+
+        ])->space(3)->extraAttributes([
+            'class' => 'pb-2',
+        ]),
+    ];
+}
+```
+
 ### Standalone tables
 
 You can manage the plugin settings via the published configuration file.
@@ -161,6 +190,35 @@ public function table(Table $table): Table
 
 protected function getListTableColumns(): array;
 protected function getGridTableColumns(): array;
+```
+
+Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.  
+
+```php
+public static function getGridTableColumns(): array
+{
+    return [
+        // Make sure to stack your columns together
+        Tables\Columns\Layout\Stack::make([
+
+            Tables\Columns\TextColumn::make('status')->badge(),
+
+            // You may group columns together using the Split layout, so they are displayed side by side
+            Tables\Columns\Layout\Split::make([
+                Tables\Columns\TextColumn::make('customer')
+                    ->description(__('Customer'), position: 'above')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('owner.name')
+                    ->description(__('Owner'), position: 'above')
+                    ->searchable(),
+            ]),
+
+        ])->space(3)->extraAttributes([
+            'class' => 'pb-2',
+        ]),
+    ];
+}
 ```
 
 ### Change settings per-table
