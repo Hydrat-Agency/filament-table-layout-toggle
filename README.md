@@ -55,7 +55,7 @@ public function panel(Panel $panel): Panel
     return $panel
         ->plugins([
             TableLayoutTogglePlugin::make()
-                ->defaultLayout('grid') // default layout for user seeing the table for the first time
+                ->setDefaultLayout('grid') // default layout for user seeing the table for the first time
                 ->persistLayoutInLocalStorage(true) // allow user to keep his layout preference in his local storage
                 ->shareLayoutBetweenPages(false) // allow all tables to share the layout option (requires persistLayoutInLocalStorage to be true)
                 ->displayToggleAction() // used to display the toggle action button automatically
