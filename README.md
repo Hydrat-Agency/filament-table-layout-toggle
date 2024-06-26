@@ -103,11 +103,14 @@ public static function table(Table $table): Table
         );
 }
 
+// Define the columns for the table when displayed in list layout
 public static function getListTableColumns(): array;
+
+// Define the columns for the table when displayed in grid layout
 public static function getGridTableColumns(): array;
 ```
 
-Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.  
+Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
 
 ```php
 public static function getGridTableColumns(): array
@@ -188,11 +191,14 @@ public function table(Table $table): Table
         );
 }
 
-protected function getListTableColumns(): array;
-protected function getGridTableColumns(): array;
+// Define the columns for the table when displayed in list layout
+public static function getListTableColumns(): array;
+
+// Define the columns for the table when displayed in grid layout
+public static function getGridTableColumns(): array;
 ```
 
-Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.  
+Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
 
 ```php
 public static function getGridTableColumns(): array
