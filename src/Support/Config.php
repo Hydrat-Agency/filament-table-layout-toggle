@@ -11,7 +11,7 @@ class Config
         return filament()->getCurrentPanel() && filament()->hasPlugin('filament-table-layout-toggle');
     }
 
-    public static function defaultLayout(): bool
+    public static function defaultLayout(): string
     {
         if (self::pluginRegistered()) {
             return TableLayoutTogglePlugin::get()->defaultLayout();
