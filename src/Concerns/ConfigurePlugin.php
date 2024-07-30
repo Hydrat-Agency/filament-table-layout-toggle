@@ -13,6 +13,8 @@ trait ConfigurePlugin
 
     protected bool|Closure $persistLayoutInLocalStorage = true;
 
+    protected bool|Closure $persistLayoutInCache = true;
+
     protected bool|Closure $shareLayoutBetweenPages = false;
 
     protected string|Closure $listLayoutButtonIcon = 'heroicon-o-list-bullet';
@@ -33,6 +35,13 @@ trait ConfigurePlugin
     public function persistLayoutInLocalStorage(bool|Closure $condition = true): static
     {
         $this->persistLayoutInLocalStorage = $condition;
+
+        return $this;
+    }
+
+    public function persistLayoutInCache(bool|Closure $condition = true): static
+    {
+        $this->persistLayoutInCache = $condition;
 
         return $this;
     }
@@ -80,6 +89,11 @@ trait ConfigurePlugin
     public function shouldPersistLayoutInLocalStorage(): bool
     {
         return $this->evaluate($this->persistLayoutInLocalStorage);
+    }
+
+    public function shouldPersistLayoutInCache(): bool
+    {
+        return $this->evaluate($this->persistLayoutInCache);
     }
 
     public function shouldShareLayoutBetweenPages(): bool

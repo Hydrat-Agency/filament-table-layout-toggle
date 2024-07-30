@@ -57,6 +57,7 @@ public function panel(Panel $panel): Panel
             TableLayoutTogglePlugin::make()
                 ->setDefaultLayout('grid') // default layout for user seeing the table for the first time
                 ->persistLayoutInLocalStorage(true) // allow user to keep his layout preference in his local storage
+                ->persistLayoutInCache(false) // allow user to keep his layout preference in cache
                 ->shareLayoutBetweenPages(false) // allow all tables to share the layout option (requires persistLayoutInLocalStorage to be true)
                 ->displayToggleAction() // used to display the toggle action button automatically
                 ->toggleActionHook('tables::toolbar.search.after') // chose the Filament view hook to render the button on
@@ -137,6 +138,32 @@ public static function getGridTableColumns(): array
         ]),
     ];
 }
+```
+
+#### Cache
+
+In order to use a regular cache instead of local storage, you must disable local storage.
+
+```php
+TableLayoutTogglePlugin::make()
+    ->persistLayoutInLocalStorage(false)
+    ->persistLayoutInCache(true)
+```
+
+To change cache store (use by default application cache store)
+or cache time (one week by default) you need to publish config.
+
+```php
+/**
+ * Enable to persist selected layout in cache.
+ */
+'cache' => [
+    'enabled' => true,
+
+    'storage' => 'redis', // change storage to redis
+
+    'time' => 60 * 24 * 7 * 4, // change ttl to 1 month
+],
 ```
 
 ### Standalone tables
@@ -251,6 +278,11 @@ class ListUsers extends Component implements HasForms, HasTable, HasActions
     protected function persistToggleStatusName(): string
     {
         return 'tableLayoutView::listUsersTable';
+    }
+    
+    protected function persistCacheEnabled(): bool
+    {
+        return true;
     }
 }
 ```

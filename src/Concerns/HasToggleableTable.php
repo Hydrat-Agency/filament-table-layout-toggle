@@ -27,6 +27,15 @@ trait HasToggleableTable
         $this->dispatch('layoutViewChanged', $value);
     }
 
+    public function bootHasToggleableTable()
+    {
+        if ($this->isUseServerCache()) {
+            $this->layoutView = cache()
+                ->store(config('table-layout-toggle.persist.cache.store'))
+                ->get($this->persistCacheName());
+        }
+    }
+
     public function bootedHasToggleableTable()
     {
         if ($this->persistToggleEnabled()) {
@@ -41,6 +50,17 @@ trait HasToggleableTable
     protected function persistToggleEnabled(): bool
     {
         return Config::shouldPersistLayoutInLocalStorage();
+    }
+
+    protected function persistCacheEnabled(): bool
+    {
+        return Config::shouldPersistLayoutInCache();
+    }
+
+    protected function isUseServerCache(): bool
+    {
+        return $this->persistCacheEnabled()
+            && !$this->persistToggleEnabled();
     }
 
     public function getDefaultLayoutView(): string
@@ -70,6 +90,16 @@ trait HasToggleableTable
         return $sharedPersistedName
             ? 'tableLayoutView'
             : 'tableLayoutView::'.md5(url()->current());
+    }
+
+    protected function persistCacheName(): string
+    {
+        $sharedPersistedName = Config::shouldShareLayoutBetweenPages();
+        $cacheName = 'tableLayoutViewForUser::'.auth()->id();
+
+        return $sharedPersistedName
+            ? $cacheName
+            : $cacheName.'::'.md5(get_called_class());
     }
 
     protected function registerLayoutViewPersisterHook()
@@ -104,6 +134,16 @@ trait HasToggleableTable
     public function changeLayoutView(): void
     {
         $this->layoutView = $this->isListLayout() ? 'grid' : 'list';
+
+        if ($this->isUseServerCache()) {
+            cache()
+                ->store(config('table-layout-toggle.persist.cache.store'))
+                ->put(
+                    $this->persistCacheName(),
+                    $this->layoutView,
+                    now()->addMinutes(config('table-layout-toggle.persist.cache.time'))
+                );
+        }
 
         $this->dispatch('layoutViewChanged', $this->layoutView);
     }

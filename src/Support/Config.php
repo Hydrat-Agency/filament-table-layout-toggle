@@ -29,6 +29,15 @@ class Config
         return config('table-layout-toggle.persist.local_storage', true);
     }
 
+    public static function shouldPersistLayoutInCache(): bool
+    {
+        if (self::pluginRegistered()) {
+            return TableLayoutTogglePlugin::get()->shouldPersistLayoutInCache();
+        }
+
+        return config('table-layout-toggle.persist.cache.enabled', false);
+    }
+
     public static function shouldShareLayoutBetweenPages(): bool
     {
         if (self::pluginRegistered()) {
