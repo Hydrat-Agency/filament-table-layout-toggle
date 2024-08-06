@@ -2,7 +2,7 @@
 
 All notable changes to `filament-table-layout-toggle` will be documented in this file.
 
-## 1.3.0 - 2024-08-06
+## 2.0.0 - 2024-08-06
 
 - Added support for cache storage by @Ercogx & @tgeorgel
 - Configuration key has changed from `persist.enabled` to `persist.persister`

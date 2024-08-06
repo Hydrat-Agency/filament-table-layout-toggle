@@ -9,6 +9,8 @@ This package brings a simple toggle button to Filament tables, allowing end user
 
 > Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toggle feature first on their package. This package is mainly an extraction of the feature so that it can be used in any project, and some other adding such as saving the selected layout in the cache or local storage.
 
+**Migrating from 1.x to 2.x ?** : Please read the [migration guide](MIGRATING.md).
+
 
 - [Screenshots](#screenshots)
 - [Installation](#installation)
@@ -26,8 +28,9 @@ This package brings a simple toggle button to Filament tables, allowing end user
 - [License](#license)
 
 
-## Screenshots
 <a name="screenshots"></a>
+
+## Screenshots
 
 **Video capture**
 
@@ -39,8 +42,10 @@ https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b1
 ![screenshot_grid](https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/56d0ecc8-07b9-459a-b045-c5916adfa703)
 
 
-## installation
+
 <a name="usage_auth_multi_account"></a>
+
+## installation
 
 You can install the package via composer:
 
@@ -62,13 +67,17 @@ php artisan vendor:publish --tag="table-layout-toggle-config"
 
 If using panels, this configuration file **WILL NOT** be read by the plugin, as the configuration happens on the plugin registration itself.
 
-## Usage
+
 <a name="usage"></a>
+
+## Usage
 
 Please chose the appropriate section for your use case (Panels or Standalone tables).
 
-### Panels
+
 <a name="usage_panels"></a>
+
+### Panels
 
 First, register the plugin on your Filament panel :
 
@@ -171,8 +180,10 @@ public static function getGridTableColumns(): array
 }
 ```
 
-### Standalone tables
+
 <a name="usage_standalone_tables"></a>
+
+### Standalone tables
 
 You can manage the plugin settings via the published configuration file.
 The options are self-documented, and should be pretty straightforward to use.
@@ -260,18 +271,21 @@ public static function getGridTableColumns(): array
 }
 ```
 
-## Configuration
+
 <a name="configuration"></a>
 
-### Layout persister
+## Configuration
+
 <a name="configuration_persister"></a>
+
+### Layout persister
 
 The plugin proposes several persister classes to save the layout preference of the user :
 
 ```php
-Persisters\LocalStoragePersister::class // Save the layout in the local storage
-Persisters\CachePersister::class // Save the layout in the application cache
-Persisters\DisabledPersister::class // Do not persist the layout
+Persisters\LocalStoragePersister::class  # Save the layout in the local storage
+Persisters\CachePersister::class         # Save the layout in the application cache
+Persisters\DisabledPersister::class      # Do not persist the layout
 ```
 
 The cache persister has several options, which you can toggle using the `persistLayoutUsing` method if using the Plugin in panels, or by changing the configuration file if using standalone tables.
@@ -329,10 +343,12 @@ class CustomPersister extends AbstractPersister implements LayoutPersister
 
 You can access the Livewire component using `$this->component`.
 
-### Change settings per-table
+
 <a name="configuration_per_table_settings"></a>
 
-Sometimes you need to tweak some settings for a specific table. This can be done by overriding the default methods in the component :
+### Change settings per-table
+
+You may need to tweak some settings for a specific table only. This can be done by overriding the default methods provided by this package in the component you are using the `HasToggleableTable` trait in :
 
 ```php
 namespace App\Livewire\Users;
@@ -367,8 +383,10 @@ class ListUsers extends Component implements HasForms, HasTable, HasActions
 }
 ```
 
-### Using own action
+
 <a name="configuration_own_action"></a>
+
+### Using own action
 
 If you rather use your own action instead of the default one, you should first disable it on the plugin registration :
 
@@ -404,28 +422,36 @@ protected function getHeaderActions(): array
 
 ```
 
-## Changelog
 <a name="changelog"></a>
+
+## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
 <a name="contributing"></a>
+
+## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
-## Security Vulnerabilities
+
 <a name="security"></a>
+
+## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
-## Credits
+
 <a name="credits"></a>
+
+## Credits
 
 - [Thomas](https://github.com/Hydrat)
 - [All Contributors](../../contributors)
 
-## License
+
 <a name="license"></a>
+
+## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
