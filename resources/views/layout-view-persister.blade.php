@@ -1,5 +1,5 @@
-@if ($persistIsEnabled)
+@if ($persistEnabled)
 <div x-data="{
-  layoutView: $persist(@entangle('layoutView').live).as('_x_{{ $persistToggleStatusName }}'),
+  layoutView: $persist(@entangle('layoutView').live).as('_x_{{ $persistKey }}'),
 }"></div>
 @endif

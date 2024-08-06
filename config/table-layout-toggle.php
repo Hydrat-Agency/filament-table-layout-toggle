@@ -1,5 +1,7 @@
 <?php
 
+use Hydrat\TableLayoutToggle\Persisters;
+
 return [
 
     'default_layout' => 'list',
@@ -26,22 +28,21 @@ return [
         /**
          * Enable to persist selected layout in user's local storage.
          */
-        'local_storage' => true,
+        'persiter' => Persisters\LocalStoragePersister::class,
 
         /**
-         * Enable to persist selected layout in cache.
+         * Configure options for the cache persister.
          */
         'cache' => [
-            'enabled' => false,
+            'store' => null, // the cache driver to use, defaults to config('cache.default')
 
-            'store' => null, // use default by config('cache.default')
-
-            'time' => 60 * 24 * 7, // time in minutes, default 1 week
+            'time' => 60 * 24 * 7, // the TTL in minutes, defaults to a week
         ],
 
         /**
-         * If enabled, changing the layout will affect all compatible tables of your app.
+         * If enabled, the toggle state will be shared for all togglable tables of the app.
          */
         'share_between_pages' => false,
     ],
+
 ];

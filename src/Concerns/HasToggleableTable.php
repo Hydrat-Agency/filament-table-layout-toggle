@@ -2,17 +2,16 @@
 
 namespace Hydrat\TableLayoutToggle\Concerns;
 
-use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Support\Facades\FilamentView;
-use Filament\Widgets\TableWidget;
-use Hydrat\TableLayoutToggle\Support\Config;
 use Illuminate\Contracts\View\View;
+use Filament\Support\Facades\FilamentView;
+use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
+use Hydrat\TableLayoutToggle\Support\Config;
 
 trait HasToggleableTable
 {
-    public $layoutView;
+    public ?string $layoutView = null;
+
+    protected LayoutPersister $layoutPersister;
 
     public function initializeHasToggleableTable()
     {
@@ -29,38 +28,36 @@ trait HasToggleableTable
 
     public function bootHasToggleableTable()
     {
-        if ($this->isUseServerCache()) {
-            $this->layoutView = cache()
-                ->store(config('table-layout-toggle.persist.cache.store'))
-                ->get($this->persistCacheName());
-        }
+        $persisterClass = Config::shouldPersistLayoutUsing();
+
+        $this->layoutPersister = new $persisterClass($this);
+
+        $this->configurePersister();
+
+        $this->layoutPersister->onComponentBoot();
+
+        $this->layoutView = $this->layoutPersister->getState() ?: $this->layoutView;
+    }
+
+    /**
+     * Modify the persister configuration,
+     * or initialize a new one for this component.
+     */
+    public function configurePersister(): void
+    {
+        // $this->layoutPersister
+        //     ->setKey(...)
+        //     ->setCacheDriver(...)
+        //     ->setExpiration(...);
     }
 
     public function bootedHasToggleableTable()
     {
-        if ($this->persistToggleEnabled()) {
-            $this->registerLayoutViewPersisterHook();
-        }
+        $this->layoutPersister->onComponentBooted();
 
         if (Config::toggleActionEnabled() && ($filamentHook = Config::toggleActionPosition())) {
             $this->registerLayoutViewToogleActionHook($filamentHook);
         }
-    }
-
-    protected function persistToggleEnabled(): bool
-    {
-        return Config::shouldPersistLayoutInLocalStorage();
-    }
-
-    protected function persistCacheEnabled(): bool
-    {
-        return Config::shouldPersistLayoutInCache();
-    }
-
-    protected function isUseServerCache(): bool
-    {
-        return $this->persistCacheEnabled()
-            && !$this->persistToggleEnabled();
     }
 
     public function getDefaultLayoutView(): string
@@ -83,34 +80,6 @@ trait HasToggleableTable
         return $this->layoutView ?? $this->getDefaultLayoutView();
     }
 
-    protected function persistToggleStatusName(): string
-    {
-        $sharedPersistedName = Config::shouldShareLayoutBetweenPages();
-
-        return $sharedPersistedName
-            ? 'tableLayoutView'
-            : 'tableLayoutView::'.md5(url()->current());
-    }
-
-    protected function persistCacheName(): string
-    {
-        $sharedPersistedName = Config::shouldShareLayoutBetweenPages();
-        $cacheName = 'tableLayoutViewForUser::'.auth()->id();
-
-        return $sharedPersistedName
-            ? $cacheName
-            : $cacheName.'::'.md5(get_called_class());
-    }
-
-    protected function registerLayoutViewPersisterHook()
-    {
-        FilamentView::registerRenderHook(
-            $this->getTableHookNameFromFilamentClassType(),
-            fn (): View => $this->renderLayoutViewPersister(),
-            scopes: static::class,
-        );
-    }
-
     protected function registerLayoutViewToogleActionHook(string $filamentHook)
     {
         FilamentView::registerRenderHook(
@@ -123,59 +92,12 @@ trait HasToggleableTable
         );
     }
 
-    protected function renderLayoutViewPersister(): View
-    {
-        return view('table-layout-toggle::layout-view-persister', [
-            'persistIsEnabled' => $this->persistToggleEnabled(),
-            'persistToggleStatusName' => $this->persistToggleStatusName(),
-        ]);
-    }
-
     public function changeLayoutView(): void
     {
         $this->layoutView = $this->isListLayout() ? 'grid' : 'list';
 
-        if ($this->isUseServerCache()) {
-            cache()
-                ->store(config('table-layout-toggle.persist.cache.store'))
-                ->put(
-                    $this->persistCacheName(),
-                    $this->layoutView,
-                    now()->addMinutes(config('table-layout-toggle.persist.cache.time'))
-                );
-        }
+        $this->layoutPersister->setState($this->layoutView);
 
         $this->dispatch('layoutViewChanged', $this->layoutView);
-    }
-
-    protected function getTableHookNameFromFilamentClassType(): string
-    {
-        return match (true) {
-            $this->isResourceFilamentClass() => 'panels::resource.pages.list-records.table.after',
-            $this->isRelationManagerFilamentClass() => 'panels::resource.relation-manager.after',
-            $this->isTableWidgetFilamentClass() => 'widgets::table-widget.start',
-            $this->isManageRelatedRecordsFilamentClass() => 'panels::resource.pages.manage-related-records.table.after',
-            default => 'panels::resource.pages.list-records.table.after',
-        };
-    }
-
-    protected function isResourceFilamentClass(): bool
-    {
-        return is_subclass_of($this, ListRecords::class);
-    }
-
-    protected function isRelationManagerFilamentClass(): bool
-    {
-        return is_subclass_of($this, RelationManager::class);
-    }
-
-    protected function isTableWidgetFilamentClass(): bool
-    {
-        return is_subclass_of($this, TableWidget::class);
-    }
-
-    protected function isManageRelatedRecordsFilamentClass(): bool
-    {
-        return is_subclass_of($this, ManageRelatedRecords::class);
     }
 }

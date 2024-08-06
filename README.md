@@ -1,23 +1,46 @@
 # Filament plugin adding a toggle button to tables, allowing users to switch between Grid and Table layouts.
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/hydrat/filament-table-layout-toggle.svg?style=flat-square)](https://packagist.org/packages/hydrat/filament-table-layout-toggle)
 [![Total Downloads](https://img.shields.io/packagist/dt/hydrat/filament-table-layout-toggle.svg?style=flat-square)](https://packagist.org/packages/hydrat/filament-table-layout-toggle)
 
 
 This package brings a simple toggle button to Filament tables, allowing end users to switch between Grid and Table layouts on tables. This approach allows mobile users to benefit from the Grid layout, while desktop users can still benefit from Table layout features, such as the table headers, sorting and so on.
 
-> Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toggle feature first on their package. This package is mainly an extraction of the feature so that it can be used in any project, and some other adding such as saving the selected layout in the local storage.
+> Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toggle feature first on their package. This package is mainly an extraction of the feature so that it can be used in any project, and some other adding such as saving the selected layout in the cache or local storage.
+
+
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Panels](#usage_panels)
+  - [Standalone tables](#usage_standalone_tables)
+- [Configuration](#configuration)
+  - [Layout persister](#configuration_persister)
+  - [Per-table settings](#configuration_per_table_settings)
+  - [Using own action](#configuration_own_action)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [Security](#security)
+- [Credits](#credits)
+- [License](#license)
 
 
 ## Screenshots
+<a name="screenshots"></a>
+
+**Video capture**
 
 https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b177a0fd-d263-4054-a05f-e6a597554d0f
+
+**Screen capture**
 
 ![screenshot_table](https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/72035a42-4439-4317-9266-e4a6cd1a757a)
 ![screenshot_grid](https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/56d0ecc8-07b9-459a-b045-c5916adfa703)
 
 
-## Installation
+## installation
+<a name="usage_auth_multi_account"></a>
 
 You can install the package via composer:
 
@@ -40,15 +63,18 @@ php artisan vendor:publish --tag="table-layout-toggle-config"
 If using panels, this configuration file **WILL NOT** be read by the plugin, as the configuration happens on the plugin registration itself.
 
 ## Usage
+<a name="usage"></a>
 
 Please chose the appropriate section for your use case (Panels or Standalone tables).
 
 ### Panels
+<a name="usage_panels"></a>
 
 First, register the plugin on your Filament panel :
 
 ```php
 use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
+use Hydrat\TableLayoutToggle\Persisters;
 
 public function panel(Panel $panel): Panel
 {
@@ -56,9 +82,12 @@ public function panel(Panel $panel): Panel
         ->plugins([
             TableLayoutTogglePlugin::make()
                 ->setDefaultLayout('grid') // default layout for user seeing the table for the first time
-                ->persistLayoutInLocalStorage(true) // allow user to keep his layout preference in his local storage
-                ->persistLayoutInCache(false) // allow user to keep his layout preference in cache
-                ->shareLayoutBetweenPages(false) // allow all tables to share the layout option (requires persistLayoutInLocalStorage to be true)
+                ->persistLayoutUsing(
+                    persister: Persisters\LocalStoragePersister::class, // chose a persister to save the layout preference of the user
+                    cacheStore: 'redis', // optional, change the cache store for the Cache persister
+                    cacheTtl: 60 * 24, // optional, change the cache time for the Cache persister
+                )
+                ->shareLayoutBetweenPages(false) // allow all tables to share the layout option for this user
                 ->displayToggleAction() // used to display the toggle action button automatically
                 ->toggleActionHook('tables::toolbar.search.after') // chose the Filament view hook to render the button on
                 ->listLayoutButtonIcon('heroicon-o-list-bullet')
@@ -66,6 +95,8 @@ public function panel(Panel $panel): Panel
         ]);
 }
 ```
+
+Read more about the Layout persister and the configuration options in the [Configuration](#configuration) section.
 
 > Please note that all those configurations are optional, and have default values, which means you can omit them if you don't need to change the default behavior.
 
@@ -140,33 +171,8 @@ public static function getGridTableColumns(): array
 }
 ```
 
-#### Cache
-
-In order to use a regular cache instead of local storage, you must disable local storage.
-
-```php
-TableLayoutTogglePlugin::make()
-    ->persistLayoutInLocalStorage(false)
-    ->persistLayoutInCache(true)
-```
-
-To change cache store (use by default application cache store)
-or cache time (one week by default) you need to publish config.
-
-```php
-/**
- * Enable to persist selected layout in cache.
- */
-'cache' => [
-    'enabled' => true,
-
-    'storage' => 'redis', // change storage to redis
-
-    'time' => 60 * 24 * 7 * 4, // change ttl to 1 month
-],
-```
-
 ### Standalone tables
+<a name="usage_standalone_tables"></a>
 
 You can manage the plugin settings via the published configuration file.
 The options are self-documented, and should be pretty straightforward to use.
@@ -254,9 +260,79 @@ public static function getGridTableColumns(): array
 }
 ```
 
-### Change settings per-table
+## Configuration
+<a name="configuration"></a>
 
-Some settings can be configured per-table, such as the default layout, the layout persistence, and the persistence local storage name :
+### Layout persister
+<a name="configuration_persister"></a>
+
+The plugin proposes several persister classes to save the layout preference of the user :
+
+```php
+Persisters\LocalStoragePersister::class // Save the layout in the local storage
+Persisters\CachePersister::class // Save the layout in the application cache
+Persisters\DisabledPersister::class // Do not persist the layout
+```
+
+The cache persister has several options, which you can toggle using the `persistLayoutUsing` method if using the Plugin in panels, or by changing the configuration file if using standalone tables.
+
+```php
+// Plugin registration
+TableLayoutTogglePlugin::make()
+    ->persistLayoutUsing(
+        persister: Persisters\CachePersister::class,
+        cacheStore: 'redis', // change storage to redis
+        cacheTtl: 60 * 24 * 7 * 4, // change ttl to 1 month
+    );
+
+// Configuration file
+'persiter' => Persisters\CachePersister::class,
+
+'cache' => [
+    'storage' => 'redis', // change storage to redis
+
+    'time' => 60 * 24 * 7 * 4, // change ttl to 1 month
+],
+```
+
+You can also create your own persister by implementing the  the `LayoutPersister` contract.
+The `AbstractPersister` class provides some default implementation which can be overridden if needed.
+
+```php
+<?php
+
+namespace App\Filament\Persisters;
+
+use Hydrat\TableLayoutToggle\Persisters;
+use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
+
+class CustomPersister extends AbstractPersister implements LayoutPersister
+{
+    public function setState(string $layoutState): self
+    {
+        persisterSetState($this->getKey(), $layoutState);
+
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return persisterGetState($this->getKey());
+    }
+
+    public function onComponentBoot(): void
+    {
+        // add filament hooks to render a custom view or so...
+    }
+}
+```
+
+You can access the Livewire component using `$this->component`.
+
+### Change settings per-table
+<a name="configuration_per_table_settings"></a>
+
+Sometimes you need to tweak some settings for a specific table. This can be done by overriding the default methods in the component :
 
 ```php
 namespace App\Livewire\Users;
@@ -265,29 +341,34 @@ class ListUsers extends Component implements HasForms, HasTable, HasActions
 {
     use HasToggleableTable;
 
+    /**
+     * Set the default layout for this table, when the user sees it for the first time.
+     */
     public function getDefaultLayoutView(): string
     {
         return 'grid';
     }
 
-    protected function persistToggleEnabled(): bool
+    /**
+     * Modify the persister configuration,
+     * or initialize a new one for this component.
+     */
+    public function configurePersister(): void
     {
-        return false;
-    }
+        // customize the persister for this specific table
+        $this->layoutPersister
+            ->setKey('custom_key'. auth()->id())
+            ->setCacheDriver('redis')
+            ->setExpiration(60 * 24 * 7 * 4);
 
-    protected function persistToggleStatusName(): string
-    {
-        return 'tableLayoutView::listUsersTable';
-    }
-    
-    protected function persistCacheEnabled(): bool
-    {
-        return true;
+        // or create a new persister for this specific table
+        $this->layoutPersister = new CustomPersister($this);
     }
 }
 ```
 
 ### Using own action
+<a name="configuration_own_action"></a>
 
 If you rather use your own action instead of the default one, you should first disable it on the plugin registration :
 
@@ -324,22 +405,27 @@ protected function getHeaderActions(): array
 ```
 
 ## Changelog
+<a name="changelog"></a>
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
+<a name="contributing"></a>
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
+<a name="security"></a>
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
+<a name="credits"></a>
 
 - [Thomas](https://github.com/Hydrat)
 - [All Contributors](../../contributors)
 
 ## License
+<a name="license"></a>
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

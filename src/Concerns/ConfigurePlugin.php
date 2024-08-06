@@ -4,6 +4,8 @@ namespace Hydrat\TableLayoutToggle\Concerns;
 
 use Closure;
 use Filament\Support\Concerns\EvaluatesClosures;
+use Hydrat\TableLayoutToggle\Persisters;
+use Hydrat\TableLayoutToggle\Contracts\LayoutPersister as LayoutPersisterContract;
 
 trait ConfigurePlugin
 {
@@ -11,9 +13,17 @@ trait ConfigurePlugin
 
     protected string|Closure $defaultLayout = 'list';
 
+    /** @deprecated */
     protected bool|Closure $persistLayoutInLocalStorage = true;
 
+    /** @deprecated */
     protected bool|Closure $persistLayoutInCache = true;
+
+    protected string|Closure $layoutPersister = Persisters\LocalStoragePersister::class;
+
+    protected null|string $cacheStore = null;
+
+    protected null|int $cacheTtl = null;
 
     protected bool|Closure $shareLayoutBetweenPages = false;
 
@@ -32,16 +42,36 @@ trait ConfigurePlugin
         return $this;
     }
 
-    public function persistLayoutInLocalStorage(bool|Closure $condition = true): static
-    {
-        $this->persistLayoutInLocalStorage = $condition;
+    public function persistLayoutUsing(
+        string|Closure $persister = Persisters\LocalStoragePersister::class,
+        ?string $cacheStore = null,
+        ?int $cacheTtl = null,
+    ): static {
+        if (is_string($persister)) {
+            if (! class_exists($persister)) {
+                throw new \InvalidArgumentException("The persister class [{$persister}] does not exist.");
+            }
+
+            if (! in_array(LayoutPersisterContract::class, class_implements($persister))) {
+                throw new \InvalidArgumentException("The persister class [{$persister}] must implement the [".LayoutPersisterContract::class."] interface.");
+            }
+        }
+
+        $this->layoutPersister = $persister;
+        $this->cacheStore = $cacheStore;
+        $this->cacheTtl = $cacheTtl;
 
         return $this;
     }
 
-    public function persistLayoutInCache(bool|Closure $condition = true): static
+    /**
+     * @deprecated v2.0.0 Use persistLayoutUsing() instead.
+     */
+    public function persistLayoutInLocalStorage(bool|Closure $condition = true): static
     {
-        $this->persistLayoutInCache = $condition;
+        if (is_bool($condition) && $condition) {
+            $this->persistLayoutUsing(Persisters\LocalStoragePersister::class);
+        }
 
         return $this;
     }
@@ -86,14 +116,19 @@ trait ConfigurePlugin
         return $this->evaluate($this->defaultLayout);
     }
 
-    public function shouldPersistLayoutInLocalStorage(): bool
+    public function shouldPersistLayoutUsing(): string
     {
-        return $this->evaluate($this->persistLayoutInLocalStorage);
+        return $this->evaluate($this->layoutPersister);
     }
 
-    public function shouldPersistLayoutInCache(): bool
+    public function shouldUseCacheStore(): ?string
     {
-        return $this->evaluate($this->persistLayoutInCache);
+        return $this->cacheStore;
+    }
+
+    public function shouldUseCacheTtl(): ?int
+    {
+        return $this->cacheTtl;
     }
 
     public function shouldShareLayoutBetweenPages(): bool

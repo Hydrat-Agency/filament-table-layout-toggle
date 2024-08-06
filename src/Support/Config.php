@@ -3,6 +3,8 @@
 namespace Hydrat\TableLayoutToggle\Support;
 
 use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
+use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
+use Hydrat\TableLayoutToggle\Persisters;
 
 class Config
 {
@@ -20,22 +22,42 @@ class Config
         return config('table-layout-toggle.default_layout', 'list');
     }
 
+    /**
+     * @deprecated v2.0.0 Use shouldPersistLayoutUsing() instead.
+     */
     public static function shouldPersistLayoutInLocalStorage(): bool
     {
-        if (self::pluginRegistered()) {
-            return TableLayoutTogglePlugin::get()->shouldPersistLayoutInLocalStorage();
-        }
-
-        return config('table-layout-toggle.persist.local_storage', true);
+        return static::shouldPersistLayoutUsing() === Persisters\LocalStoragePersister::class;
     }
 
-    public static function shouldPersistLayoutInCache(): bool
+    /**
+     * @return string<LayoutPersister>
+     */
+    public static function shouldPersistLayoutUsing(): string
     {
         if (self::pluginRegistered()) {
-            return TableLayoutTogglePlugin::get()->shouldPersistLayoutInCache();
+            return TableLayoutTogglePlugin::get()->shouldPersistLayoutUsing();
         }
 
-        return config('table-layout-toggle.persist.cache.enabled', false);
+        return config('table-layout-toggle.persist.persiter', Persisters\LocalStoragePersister::class);
+    }
+
+    public static function shouldUseCacheStore(): ?string
+    {
+        if (self::pluginRegistered()) {
+            return TableLayoutTogglePlugin::get()->shouldUseCacheStore();
+        }
+
+        return config('table-layout-toggle.persist.cache.store', null);
+    }
+
+    public static function shouldUseCacheTtl(): ?int
+    {
+        if (self::pluginRegistered()) {
+            return TableLayoutTogglePlugin::get()->shouldUseCacheTtl();
+        }
+
+        return config('table-layout-toggle.persist.cache.time', 60 * 24 * 7);
     }
 
     public static function shouldShareLayoutBetweenPages(): bool

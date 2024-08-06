@@ -2,6 +2,23 @@
 
 All notable changes to `filament-table-layout-toggle` will be documented in this file.
 
-## 1.0.0 - 202X-XX-XX
+## 1.3.0 - 2024-08-06
 
-- initial release
+- Added support for cache storage by @Ercogx & @tgeorgel
+- Configuration key has changed from `persist.enabled` to `persist.persister`
+
+## 1.2.1 - 2024-07-23
+
+- Return type typo fix by @lairg99
+
+## 1.2.0 - 2024-03-18
+
+- Laravel 11 support
+
+## 1.1.0 - 2024-02-12
+
+- Added support for filament table standalone package
+
+## 1.0.0 - 2024-01-02
+
+- Initial stable release
