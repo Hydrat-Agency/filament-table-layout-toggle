@@ -4,8 +4,8 @@ namespace Hydrat\TableLayoutToggle\Concerns;
 
 use Closure;
 use Filament\Support\Concerns\EvaluatesClosures;
-use Hydrat\TableLayoutToggle\Persisters;
 use Hydrat\TableLayoutToggle\Contracts\LayoutPersister as LayoutPersisterContract;
+use Hydrat\TableLayoutToggle\Persisters;
 
 trait ConfigurePlugin
 {
@@ -21,9 +21,9 @@ trait ConfigurePlugin
 
     protected string|Closure $layoutPersister = Persisters\LocalStoragePersister::class;
 
-    protected null|string $cacheStore = null;
+    protected ?string $cacheStore = null;
 
-    protected null|int $cacheTtl = null;
+    protected ?int $cacheTtl = null;
 
     protected bool|Closure $shareLayoutBetweenPages = false;
 
@@ -53,7 +53,7 @@ trait ConfigurePlugin
             }
 
             if (! in_array(LayoutPersisterContract::class, class_implements($persister))) {
-                throw new \InvalidArgumentException("The persister class [{$persister}] must implement the [".LayoutPersisterContract::class."] interface.");
+                throw new \InvalidArgumentException("The persister class [{$persister}] must implement the [".LayoutPersisterContract::class.'] interface.');
             }
         }
 

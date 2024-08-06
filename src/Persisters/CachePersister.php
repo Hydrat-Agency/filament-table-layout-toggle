@@ -2,13 +2,14 @@
 
 namespace Hydrat\TableLayoutToggle\Persisters;
 
-use Livewire\Component;
-use Hydrat\TableLayoutToggle\Support\Config;
 use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
+use Hydrat\TableLayoutToggle\Support\Config;
+use Livewire\Component;
 
 class CachePersister extends AbstractPersister implements LayoutPersister
 {
     protected ?string $cacheStore;
+
     protected int $ttl;
 
     public function __construct(
@@ -23,6 +24,7 @@ class CachePersister extends AbstractPersister implements LayoutPersister
     public function setCacheStore(string $driver): self
     {
         $this->cacheStore = $driver;
+
         return $this;
     }
 
@@ -34,6 +36,7 @@ class CachePersister extends AbstractPersister implements LayoutPersister
     public function setExpiration(int $expirationMinutes): self
     {
         $this->ttl = $expirationMinutes;
+
         return $this;
     }
 

@@ -2,14 +2,14 @@
 
 namespace Hydrat\TableLayoutToggle\Persisters;
 
-use Filament\Support\Facades\FilamentView;
-use Illuminate\Contracts\View\View;
-use Hydrat\TableLayoutToggle\Support\Config;
-use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
-use Filament\Widgets\TableWidget;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Facades\FilamentView;
+use Filament\Widgets\TableWidget;
+use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
+use Hydrat\TableLayoutToggle\Support\Config;
+use Illuminate\Contracts\View\View;
 
 class LocalStoragePersister extends AbstractPersister implements LayoutPersister
 {

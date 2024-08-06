@@ -2,10 +2,10 @@
 
 namespace Hydrat\TableLayoutToggle\Persisters;
 
-use Livewire\Component;
-use Illuminate\Support\Arr;
-use Hydrat\TableLayoutToggle\Support\Config;
 use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
+use Hydrat\TableLayoutToggle\Support\Config;
+use Illuminate\Support\Arr;
+use Livewire\Component;
 
 abstract class AbstractPersister implements LayoutPersister
 {
@@ -29,7 +29,7 @@ abstract class AbstractPersister implements LayoutPersister
             false => [auth()->id(), get_class($this->component)],
         };
 
-        return 'tableLayoutView::' . md5(Arr::join($cacheUniqueKeyParts, '::'));
+        return 'tableLayoutView::'.md5(Arr::join($cacheUniqueKeyParts, '::'));
     }
 
     /**
@@ -38,6 +38,7 @@ abstract class AbstractPersister implements LayoutPersister
     public function setKey(string $key): self
     {
         $this->cacheKey = $key;
+
         return $this;
     }
 

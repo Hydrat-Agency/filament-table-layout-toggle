@@ -2,10 +2,10 @@
 
 namespace Hydrat\TableLayoutToggle\Concerns;
 
-use Illuminate\Contracts\View\View;
 use Filament\Support\Facades\FilamentView;
 use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
 use Hydrat\TableLayoutToggle\Support\Config;
+use Illuminate\Contracts\View\View;
 
 trait HasToggleableTable
 {

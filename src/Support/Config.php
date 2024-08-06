@@ -2,9 +2,9 @@
 
 namespace Hydrat\TableLayoutToggle\Support;
 
-use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
 use Hydrat\TableLayoutToggle\Contracts\LayoutPersister;
 use Hydrat\TableLayoutToggle\Persisters;
+use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
 
 class Config
 {
