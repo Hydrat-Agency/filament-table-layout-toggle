@@ -22,6 +22,7 @@ This package brings a simple toggle button to Filament tables, allowing end user
   - [Per-table settings](#configuration_per_table_settings)
   - [Using own action](#configuration_own_action)
 - [Changelog](#changelog)
+- [Migration guide](#migration_guide)
 - [Contributing](#contributing)
 - [Security](#security)
 - [Credits](#credits)
@@ -427,6 +428,12 @@ protected function getHeaderActions(): array
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+<a name="migration_guide"></a>
+
+## Migration guide
+
+Please see [MIGRATION](MIGRATION.md) for more information on what has changed recently.
 
 <a name="contributing"></a>
 

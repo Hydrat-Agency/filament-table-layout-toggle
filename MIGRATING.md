@@ -24,10 +24,10 @@ Using panels:
 ```diff
 use Hydrat\TableLayoutToggle\Persisters\LocalStoragePersister;
 
-->plugins([
+\->plugins([
     TableLayoutTogglePlugin::make()
--        ->persistLayoutInLocalStorage()
-+        ->persistLayoutUsing(LocalStoragePersister::class)
+-       ->persistLayoutInLocalStorage()
++       ->persistLayoutUsing(LocalStoragePersister::class)
         ->shareLayoutBetweenPages()
         ->displayToggleAction(),
 ])
@@ -36,29 +36,35 @@ use Hydrat\TableLayoutToggle\Persisters\LocalStoragePersister;
 If you were using customizations on the cache key, you now need to change the component class to configure the persister instead :
 
 ```diff
--protected function persistToggleStatusName(): string
--{
--    return 'tableLayoutView::listUsersTable';
--}
+class ListEntries extends ListRecords
+{
+-    protected function persistToggleStatusName(): string
+-    {
+-        return 'tableLayoutView::listUsersTable';
+-    }
 
 
-+public function configurePersister(): void
-+{
-+    $this->layoutPersister->setKey('tableLayoutView::listUsersTable');
-+}
++    public function configurePersister(): void
++    {
++        $this->layoutPersister->setKey('tableLayoutView::listUsersTable');
++    }
+}
 ```
 
 If you were disabling the persister on a table using `persistToggleEnabled()` method, you should now setup a `DisabledPersister` instead :
 
 ```diff
--protected function persistToggleEnabled(): bool
--{
--    return false;
--}
+class ListEntries extends ListRecords
+{
+-    protected function persistToggleEnabled(): bool
+-    {
+-        return false;
+-    }
 
 
-+public function configurePersister(): void
-+{
-+    $this->layoutPersister = new \Hydrat\TableLayoutToggle\Persisters\DisabledPersister($this);
-+}
++    public function configurePersister(): void
++    {
++        $this->layoutPersister = new \Hydrat\TableLayoutToggle\Persisters\DisabledPersister($this);
++    }
+}
 ```
