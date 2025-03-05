@@ -126,6 +126,7 @@ Finally, you need to configure your table so it dynamically sets the schema base
 ```php
 public static function table(Table $table): Table
 {
+    /** @var \Hydrat\TableLayoutToggle\Concerns\HasToggleableTable $livewire */
     $livewire = $table->getLivewire();
 
     return $table
