@@ -52,7 +52,7 @@ https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b1
 
 <a name="usage_auth_multi_account"></a>
 
-## installation
+## Installation
 
 You can install the package via composer:
 
@@ -79,7 +79,7 @@ If using panels, this configuration file **WILL NOT** be read by the plugin, as 
 
 ## Usage
 
-Please chose the appropriate section for your use case (Panels or Standalone tables).
+Please chose the appropriate section for your use case ([Panels](#usage_panels) or [Standalone tables](#usage_standalone_tables)).
 
 
 <a name="usage_panels"></a>
