@@ -10,9 +10,6 @@ This package brings a simple toggle button to Filament tables, allowing end user
 
 > Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toggle feature first on their package. This package is mainly an extraction of the feature so that it can be used in any project, and some other adding such as saving the selected layout in the cache or local storage.
 
-**Migrating from 1.x to 2.x ?** : Please read the [migration guide](MIGRATING.md).
-**Migrating from Filament v3 to v4 ?** : Please read the [migration guide](MIGRATING.md).
-
 ## Requirements
 
 - **PHP**: 8.2+
