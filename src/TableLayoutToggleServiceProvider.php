@@ -2,21 +2,21 @@
 
 namespace Hydrat\TableLayoutToggle;
 
-use Livewire\Livewire;
-use Filament\Support\Assets\Js;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Asset;
-use Illuminate\Support\Facades\App;
-use Illuminate\Filesystem\Filesystem;
-use Spatie\LaravelPackageTools\Package;
-use Filament\Support\Facades\FilamentIcon;
-use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Assets\AlpineComponent;
-use Livewire\Features\SupportTesting\Testable;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
-use Hydrat\TableLayoutToggle\Testing\TestsTableLayoutToggle;
+use Filament\Support\Assets\Asset;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Facades\FilamentIcon;
 use Hydrat\TableLayoutToggle\Commands\TableLayoutToggleCommand;
+use Hydrat\TableLayoutToggle\Testing\TestsTableLayoutToggle;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\App;
+use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class TableLayoutToggleServiceProvider extends PackageServiceProvider
 {
@@ -60,9 +60,7 @@ class TableLayoutToggleServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void
-    {
-    }
+    public function packageRegistered(): void {}
 
     public function packageBooted(): void
     {
