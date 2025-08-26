@@ -93,7 +93,6 @@ First, register the plugin on your Filament panel :
 
 ```php
 use Hydrat\TableLayoutToggle\TableLayoutTogglePlugin;
-use Hydrat\TableLayoutToggle\Persisters;
 
 public function panel(Panel $panel): Panel
 {
@@ -102,7 +101,7 @@ public function panel(Panel $panel): Panel
             TableLayoutTogglePlugin::make()
                 ->setDefaultLayout('grid') // default layout for user seeing the table for the first time
                 ->persistLayoutUsing(
-                    persister: Persisters\LocalStoragePersister::class, // chose a persister to save the layout preference of the user
+                    persister: \Hydrat\TableLayoutToggle\Persisters\LocalStoragePersister::class, // chose a persister to save the layout preference of the user
                     cacheStore: 'redis', // optional, change the cache store for the Cache persister
                     cacheTtl: 60 * 24, // optional, change the cache time for the Cache persister
                 )
@@ -130,39 +129,46 @@ class MyListRecords extends ListRecords
 }
 ```
 
-Finally, you need to configure your table so it dynamically sets the schema based on the selected layout. This is typically done on the resource's `table()` method :
+Finally, you need to configure your table so it dynamically sets the schema based on the selected layout. This is typically done on the resource's Table class (eg: `App\Filament\Resources\Entries\Tables`) :
 
 ```php
-public static function table(Table $table): Table
+
+class EntriesTable
 {
-    /** @var \Hydrat\TableLayoutToggle\Concerns\HasToggleableTable $livewire */
-    $livewire = $table->getLivewire();
+    public static function configure(Table $table): Table
+    {
+        /** @var \Hydrat\TableLayoutToggle\Concerns\HasToggleableTable $livewire */
+        $livewire = $table->getLivewire();
 
-    return $table
-        ->columns(
-            $livewire->isGridLayout()
-                ? static::getGridTableColumns()
-                : static::getListTableColumns()
-        )
-        ->contentGrid(
-            fn () => $livewire->isListLayout()
-                ? null
-                : [
-                    'md' => 2,
-                    'lg' => 3,
-                    'xl' => 4,
-                ]
-        );
+        return $table
+            ->columns(
+                $livewire->isGridLayout()
+                    ? static::getGridTableColumns()
+                    : static::getListTableColumns()
+            )
+            ->contentGrid(
+                fn () => $livewire->isListLayout()
+                    ? null
+                    : [
+                        'md' => 2,
+                        'lg' => 3,
+                        'xl' => 4,
+                    ]
+            )
+            ->filters([
+                //
+            ]);
+    }
+
+    // Define the columns for the table when displayed in list layout
+    public static function getListTableColumns(): array;
+
+    // Define the columns for the table when displayed in grid layout
+    public static function getGridTableColumns(): array;
 }
-
-// Define the columns for the table when displayed in list layout
-public static function getListTableColumns(): array;
-
-// Define the columns for the table when displayed in grid layout
-public static function getGridTableColumns(): array;
 ```
 
-Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
+Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/4.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
 
 ```php
 public static function getGridTableColumns(): array
@@ -227,23 +233,29 @@ If you plan to persist the layout in the local storage, you must also change you
 Finally, you need to configure your table so it dynamically sets the schema based on the selected layout. This is typically done on the component's `table()` method :
 
 ```php
-public function table(Table $table): Table
+public static function table(Table $table): Table
 {
+    /** @var \Hydrat\TableLayoutToggle\Concerns\HasToggleableTable $livewire */
+    $livewire = $table->getLivewire();
+
     return $table
         ->columns(
-            $this->isGridLayout()
-                ? $this->getGridTableColumns()
-                : $this->getListTableColumns()
+            $livewire->isGridLayout()
+                ? static::getGridTableColumns()
+                : static::getListTableColumns()
         )
         ->contentGrid(
-            fn () => $this->isListLayout()
+            fn () => $livewire->isListLayout()
                 ? null
                 : [
                     'md' => 2,
                     'lg' => 3,
                     'xl' => 4,
                 ]
-        );
+        )
+        ->filters([
+            //
+        ]);
 }
 
 // Define the columns for the table when displayed in list layout
@@ -253,7 +265,7 @@ public static function getListTableColumns(): array;
 public static function getGridTableColumns(): array;
 ```
 
-Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/3.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
+Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/4.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
 
 ```php
 public static function getGridTableColumns(): array
@@ -294,9 +306,9 @@ public static function getGridTableColumns(): array
 The plugin proposes several persister classes to save the layout preference of the user :
 
 ```php
-Persisters\LocalStoragePersister::class  # Save the layout in the local storage
-Persisters\CachePersister::class         # Save the layout in the application cache
-Persisters\DisabledPersister::class      # Do not persist the layout
+Hydrat\TableLayoutToggle\Persisters\LocalStoragePersister::class  # Save the layout in the local storage
+Hydrat\TableLayoutToggle\Persisters\CachePersister::class         # Save the layout in the application cache
+Hydrat\TableLayoutToggle\Persisters\DisabledPersister::class      # Do not persist the layout
 ```
 
 The cache persister has several options, which you can toggle using the `persistLayoutUsing` method if using the Plugin in panels, or by changing the configuration file if using standalone tables.
