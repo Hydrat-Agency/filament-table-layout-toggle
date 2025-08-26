@@ -2,20 +2,21 @@
 
 namespace Hydrat\TableLayoutToggle;
 
-use Filament\Support\Assets\AlpineComponent;
-use Filament\Support\Assets\Asset;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Js;
-use Filament\Support\Facades\FilamentAsset;
-use Filament\Support\Facades\FilamentIcon;
-use Hydrat\TableLayoutToggle\Commands\TableLayoutToggleCommand;
-use Hydrat\TableLayoutToggle\Testing\TestsTableLayoutToggle;
-use Illuminate\Filesystem\Filesystem;
-use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Filament\Support\Assets\Js;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Asset;
+use Illuminate\Support\Facades\App;
+use Illuminate\Filesystem\Filesystem;
 use Spatie\LaravelPackageTools\Package;
+use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Assets\AlpineComponent;
+use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Hydrat\TableLayoutToggle\Testing\TestsTableLayoutToggle;
+use Hydrat\TableLayoutToggle\Commands\TableLayoutToggleCommand;
 
 class TableLayoutToggleServiceProvider extends PackageServiceProvider
 {
@@ -59,7 +60,9 @@ class TableLayoutToggleServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void
+    {
+    }
 
     public function packageBooted(): void
     {
@@ -78,8 +81,9 @@ class TableLayoutToggleServiceProvider extends PackageServiceProvider
         FilamentIcon::register($this->getIcons());
 
         // Handle Stubs
-        if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
+        if (App::runningInConsole()) {
+            $filesystem = App::make(Filesystem::class);
+            foreach ($filesystem->files(__DIR__.'/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/filament-table-layout-toggle/{$file->getFilename()}"),
                 ], 'filament-table-layout-toggle-stubs');

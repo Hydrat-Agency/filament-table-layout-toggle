@@ -6,5 +6,11 @@ module.exports = {
         './app/Filament/**/*.php',
         './resources/views/filament/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
+        './src/**/*.php',
+        './resources/views/**/*.blade.php',
     ],
+    // Tailwind v4 specific configuration
+    future: {
+        hoverOnlyWhenSupported: true,
+    },
 }

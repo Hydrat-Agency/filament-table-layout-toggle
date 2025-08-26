@@ -3,6 +3,7 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/hydrat/filament-table-layout-toggle.svg?style=flat-square)](https://packagist.org/packages/hydrat/filament-table-layout-toggle)
 [![Total Downloads](https://img.shields.io/packagist/dt/hydrat/filament-table-layout-toggle.svg?style=flat-square)](https://packagist.org/packages/hydrat/filament-table-layout-toggle)
+[![Filament Version](https://img.shields.io/badge/Filament-4.x-blue.svg?style=flat-square)](https://filamentphp.com/docs/4.x)
 
 
 This package brings a simple toggle button to Filament tables, allowing end users to switch between Grid and Table layouts on tables. This approach allows mobile users to benefit from the Grid layout, while desktop users can still benefit from Table layout features, such as the table headers, sorting and so on.
@@ -10,6 +11,14 @@ This package brings a simple toggle button to Filament tables, allowing end user
 > Big shoutout to [awcodes/filament-curator](https://github.com/awcodes/filament-curator), which implemented the toggle feature first on their package. This package is mainly an extraction of the feature so that it can be used in any project, and some other adding such as saving the selected layout in the cache or local storage.
 
 **Migrating from 1.x to 2.x ?** : Please read the [migration guide](MIGRATING.md).
+**Migrating from Filament v3 to v4 ?** : Please read the [migration guide](MIGRATING.md).
+
+## Requirements
+
+- **PHP**: 8.2+
+- **Laravel**: 11.28+
+- **Filament**: 4.0+
+- **Tailwind CSS**: 4.0+ (if using custom theme CSS)
 
 
 - [Screenshots](#screenshots)
@@ -51,7 +60,7 @@ https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b1
 You can install the package via composer:
 
 ```bash
-composer require hydrat/filament-table-layout-toggle
+composer require hydrat/filament-table-layout-toggle:^3.0
 ```
 
 Optionally, you can publish the views using

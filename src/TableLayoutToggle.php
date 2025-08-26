@@ -3,7 +3,6 @@
 namespace Hydrat\TableLayoutToggle;
 
 use Filament\Actions\Action;
-use Filament\Tables\Actions\Action as TableAction;
 use Hydrat\TableLayoutToggle\Support\Config;
 
 class TableLayoutToggle
@@ -26,21 +25,11 @@ class TableLayoutToggle
             ]);
     }
 
-    public function getToggleViewTableAction(bool $compact = false): TableAction
+    /**
+     * @deprecated v3.0.0 Use getToggleViewAction() instead, as Filament now has a single Action class.
+     */
+    public function getToggleViewTableAction(bool $compact = false): Action
     {
-        return TableAction::make('toggle-table-view-gt')
-            ->color('gray')
-            ->hiddenLabel(true)
-            ->icon(function ($livewire): string {
-                return $livewire->layoutView === 'grid'
-                    ? Config::getListLayoutButtonIcon()
-                    : Config::getGridLayoutButtonIcon();
-            })
-            ->action(function ($livewire): void {
-                $livewire->dispatch('changeLayoutView');
-            })
-            ->extraAttributes([
-                'class' => $compact ? '!p-0 !m-0 border-none' : '',
-            ]);
+        return $this->getToggleViewAction($compact);
     }
 }

@@ -17,12 +17,12 @@ class TableLayoutTogglePlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        //
+        // Register any panel-specific configurations here
     }
 
     public function boot(Panel $panel): void
     {
-        //
+        // Boot any panel-specific functionality here
     }
 
     public static function make(): static
