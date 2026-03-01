@@ -14,7 +14,7 @@ This package brings a simple toggle button to Filament tables, allowing end user
 
 - **PHP**: 8.2+
 - **Laravel**: 11.28+
-- **Filament**: 4.0+
+- **Filament**: 4.2+||^5.x
 - **Tailwind CSS**: 4.0+ (if using custom theme CSS)
 
 
@@ -57,7 +57,7 @@ https://github.com/Hydrat-Agency/filament-table-layout-toggle/assets/11785727/b1
 You can install the package via composer:
 
 ```bash
-composer require hydrat/filament-table-layout-toggle:^3.0
+composer require hydrat/filament-table-layout-toggle:^4.0
 ```
 
 Optionally, you can publish the views using
