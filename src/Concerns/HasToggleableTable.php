@@ -23,7 +23,6 @@ trait HasToggleableTable
     {
         $this->listeners = $this->listeners + [
             'changeLayoutView' => 'changeLayoutView',
-            'layoutViewChanged' => '$refresh',
         ];
     }
 
@@ -70,6 +69,11 @@ trait HasToggleableTable
         if ($this->tableBuiltForLayout !== $this->getLayoutView()) {
             $this->table = $this->table($this->makeTable());
             $this->tableBuiltForLayout = $this->getLayoutView();
+        }
+
+        if (! $this->getTable()->hasColumnsLayout() && blank($this->tableColumns)) {
+            $this->cachedDefaultTableColumnState = null;
+            $this->initTableColumnManager();
         }
     }
 
@@ -134,7 +138,5 @@ trait HasToggleableTable
         $this->layoutView = $this->isListLayout() ? 'grid' : 'list';
 
         $this->layoutPersister->setState($this->layoutView);
-
-        $this->dispatch('layoutViewChanged', $this->layoutView);
     }
 }
