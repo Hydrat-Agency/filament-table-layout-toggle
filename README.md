@@ -170,21 +170,25 @@ class EntriesTable
 Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/4.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
 
 ```php
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\TextColumn;
+
 public static function getGridTableColumns(): array
 {
     return [
         // Make sure to stack your columns together
-        Tables\Columns\Layout\Stack::make([
+        Stack::make([
 
-            Tables\Columns\TextColumn::make('status')->badge(),
+            TextColumn::make('status')->badge(),
 
             // You may group columns together using the Split layout, so they are displayed side by side
-            Tables\Columns\Layout\Split::make([
-                Tables\Columns\TextColumn::make('customer')
+            Split::make([
+                TextColumn::make('customer')
                     ->description(__('Customer'), position: 'above')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('owner.name')
+                TextColumn::make('owner.name')
                     ->description(__('Owner'), position: 'above')
                     ->searchable(),
             ]),
@@ -267,21 +271,25 @@ public static function getGridTableColumns(): array;
 Please note that you must use the Layout tools described in the [filament documentation](https://filamentphp.com/docs/4.x/tables/layout#controlling-column-width-using-a-grid) in order for your Grid layout to render correctly. You may also use the `description()` method to print labels above your values.
 
 ```php
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\TextColumn;
+
 public static function getGridTableColumns(): array
 {
     return [
         // Make sure to stack your columns together
-        Tables\Columns\Layout\Stack::make([
+        Stack::make([
 
-            Tables\Columns\TextColumn::make('status')->badge(),
+            TextColumn::make('status')->badge(),
 
             // You may group columns together using the Split layout, so they are displayed side by side
-            Tables\Columns\Layout\Split::make([
-                Tables\Columns\TextColumn::make('customer')
+            Split::make([
+                TextColumn::make('customer')
                     ->description(__('Customer'), position: 'above')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('owner.name')
+                TextColumn::make('owner.name')
                     ->description(__('Owner'), position: 'above')
                     ->searchable(),
             ]),

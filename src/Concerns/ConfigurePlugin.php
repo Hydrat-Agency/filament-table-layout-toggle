@@ -27,9 +27,9 @@ trait ConfigurePlugin
 
     protected bool|Closure $shareLayoutBetweenPages = false;
 
-    protected string|Closure $listLayoutButtonIcon = 'heroicon-o-list-bullet';
+    protected string|Closure $listLayoutButtonIcon = 'heroicon-s-list-bullet';
 
-    protected string|Closure $gridLayoutButtonIcon = 'heroicon-o-squares-2x2';
+    protected string|Closure $gridLayoutButtonIcon = 'heroicon-s-squares-2x2';
 
     protected bool|Closure $toggleActionEnabled = true;
 
@@ -85,14 +85,14 @@ trait ConfigurePlugin
         return $this;
     }
 
-    public function listLayoutButtonIcon(string|Closure $icon = 'heroicon-o-list-bullet'): static
+    public function listLayoutButtonIcon(string|Closure $icon = 'heroicon-s-list-bullet'): static
     {
         $this->listLayoutButtonIcon = $icon;
 
         return $this;
     }
 
-    public function gridLayoutButtonIcon(string|Closure $icon = 'heroicon-o-squares-2x2'): static
+    public function gridLayoutButtonIcon(string|Closure $icon = 'heroicon-s-squares-2x2'): static
     {
         $this->gridLayoutButtonIcon = $icon;
 

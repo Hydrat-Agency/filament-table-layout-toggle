@@ -11,6 +11,12 @@ trait HasToggleableTable
 {
     public ?string $layoutView = null;
 
+    /**
+     * Tracks the layout view that the table was last built for,
+     * so renderingHasToggleableTable() can decide when a rebuild is needed.
+     */
+    protected ?string $tableBuiltForLayout = null;
+
     protected LayoutPersister $layoutPersister;
 
     public function initializeHasToggleableTable()
@@ -39,6 +45,34 @@ trait HasToggleableTable
         $this->layoutView = $this->layoutPersister->getState() ?: $this->layoutView;
     }
 
+    public function bootedHasToggleableTable()
+    {
+        // Record which layout the table was just built for (bootedInteractsWithTable
+        // runs in the same booted phase and builds the table before this method).
+        $this->tableBuiltForLayout = $this->getLayoutView();
+
+        $this->layoutPersister->onComponentBooted();
+
+        if (Config::toggleActionEnabled() && ($filamentHook = Config::toggleActionPosition())) {
+            $this->registerLayoutViewToogleActionHook($filamentHook);
+        }
+    }
+
+    /**
+     * Runs just before the Livewire view renders, after all methods and property
+     * updates have been processed. Rebuilds the table if the layout changed since
+     * bootedInteractsWithTable() built it — without relying on updated* hooks
+     * (which Livewire only fires for payload-driven property changes, not PHP-side
+     * assignments inside methods like changeLayoutView()).
+     */
+    public function renderingHasToggleableTable(): void
+    {
+        if ($this->tableBuiltForLayout !== $this->getLayoutView()) {
+            $this->table = $this->table($this->makeTable());
+            $this->tableBuiltForLayout = $this->getLayoutView();
+        }
+    }
+
     /**
      * Modify the persister configuration,
      * or initialize a new one for this component.
@@ -49,15 +83,6 @@ trait HasToggleableTable
         //     ->setKey(...)
         //     ->setCacheDriver(...)
         //     ->setExpiration(...);
-    }
-
-    public function bootedHasToggleableTable()
-    {
-        $this->layoutPersister->onComponentBooted();
-
-        if (Config::toggleActionEnabled() && ($filamentHook = Config::toggleActionPosition())) {
-            $this->registerLayoutViewToogleActionHook($filamentHook);
-        }
     }
 
     public function getDefaultLayoutView(): string

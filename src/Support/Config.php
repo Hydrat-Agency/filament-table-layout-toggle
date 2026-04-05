@@ -93,7 +93,7 @@ class Config
             return TableLayoutTogglePlugin::get()->getListLayoutButtonIcon();
         }
 
-        return config('table-layout-toggle.toggle_action.list_icon', 'heroicon-o-list-bullet');
+        return config('table-layout-toggle.toggle_action.list_icon', 'heroicon-s-list-bullet');
     }
 
     public static function getGridLayoutButtonIcon(): string
@@ -102,7 +102,7 @@ class Config
             return TableLayoutTogglePlugin::get()->getGridLayoutButtonIcon();
         }
 
-        return config('table-layout-toggle.toggle_action.grid_icon', 'heroicon-o-squares-2x2');
+        return config('table-layout-toggle.toggle_action.grid_icon', 'heroicon-s-squares-2x2');
     }
 
     public static function autoMobileLayout(): bool

@@ -26,8 +26,8 @@ return [
         /**
          * Action icons when toggling between list and grid layout.
          */
-        'list_icon' => 'heroicon-o-list-bullet',
-        'grid_icon' => 'heroicon-o-squares-2x2',
+        'list_icon' => 'heroicon-s-list-bullet',
+        'grid_icon' => 'heroicon-s-squares-2x2',
     ],
 
     'persist' => [
