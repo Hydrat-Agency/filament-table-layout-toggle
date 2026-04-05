@@ -6,6 +6,12 @@ return [
 
     'default_layout' => 'list',
 
+    /**
+     * When enabled, automatically use the grid layout for users visiting on a mobile device,
+     * but only if they have no previously saved layout preference.
+     */
+    'auto_mobile_layout' => false,
+
     'toggle_action' => [
         /**
          * Should the toggle action get automatically displayed ?

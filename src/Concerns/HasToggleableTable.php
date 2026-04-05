@@ -62,7 +62,19 @@ trait HasToggleableTable
 
     public function getDefaultLayoutView(): string
     {
+        if (Config::autoMobileLayout() && $this->isMobileDevice()) {
+            return 'grid';
+        }
+
         return Config::defaultLayout();
+    }
+
+    protected function isMobileDevice(): bool
+    {
+        return (bool) preg_match(
+            '/Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i',
+            request()->header('User-Agent', '')
+        );
     }
 
     public function isGridLayout(): bool

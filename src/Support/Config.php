@@ -104,4 +104,13 @@ class Config
 
         return config('table-layout-toggle.toggle_action.grid_icon', 'heroicon-o-squares-2x2');
     }
+
+    public static function autoMobileLayout(): bool
+    {
+        if (self::pluginRegistered()) {
+            return TableLayoutTogglePlugin::get()->autoMobileLayout();
+        }
+
+        return config('table-layout-toggle.auto_mobile_layout', false);
+    }
 }

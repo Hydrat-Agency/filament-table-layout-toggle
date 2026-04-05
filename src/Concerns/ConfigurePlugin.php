@@ -35,6 +35,8 @@ trait ConfigurePlugin
 
     protected string|Closure $toggleActionPosition = 'tables::toolbar.search.after';
 
+    protected bool|Closure $autoMobileLayout = false;
+
     public function setDefaultLayout(string|Closure $defaultLayout = 'list'): static
     {
         $this->defaultLayout = $defaultLayout;
@@ -111,6 +113,13 @@ trait ConfigurePlugin
         return $this;
     }
 
+    public function enableAutoMobileLayout(bool|Closure $condition = true): static
+    {
+        $this->autoMobileLayout = $condition;
+
+        return $this;
+    }
+
     public function defaultLayout(): string
     {
         return $this->evaluate($this->defaultLayout);
@@ -154,5 +163,10 @@ trait ConfigurePlugin
     public function toggleActionPosition(): string
     {
         return $this->evaluate($this->toggleActionPosition);
+    }
+
+    public function autoMobileLayout(): bool
+    {
+        return $this->evaluate($this->autoMobileLayout);
     }
 }

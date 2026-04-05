@@ -25,6 +25,7 @@ This package brings a simple toggle button to Filament tables, allowing end user
   - [Standalone tables](#usage_standalone_tables)
 - [Configuration](#configuration)
   - [Layout persister](#configuration_persister)
+  - [Auto mobile layout](#configuration_auto_mobile_layout)
   - [Per-table settings](#configuration_per_table_settings)
   - [Using own action](#configuration_own_action)
 - [Changelog](#changelog)
@@ -106,7 +107,8 @@ public function panel(Panel $panel): Panel
                 ->displayToggleAction() // used to display the toggle action button automatically
                 ->toggleActionHook('tables::toolbar.search.after') // chose the Filament view hook to render the button on
                 ->listLayoutButtonIcon('heroicon-o-list-bullet')
-                ->gridLayoutButtonIcon('heroicon-o-squares-2x2'),
+                ->gridLayoutButtonIcon('heroicon-o-squares-2x2')
+                ->enableAutoMobileLayout(), // automatically use grid layout for mobile users with no saved preference
         ]);
 }
 ```
@@ -362,6 +364,28 @@ class CustomPersister extends AbstractPersister implements LayoutPersister
 ```
 
 You can access the Livewire component using `$this->component`.
+
+
+<a name="configuration_auto_mobile_layout"></a>
+
+### Auto mobile layout
+
+When enabled, the grid layout is automatically applied for users visiting from a mobile device, **but only if they have no previously saved layout preference**. Once the user manually switches the layout, their choice is persisted as usual.
+
+Detection is based on the `User-Agent` header sent by the browser.
+
+**Panel plugin:**
+
+```php
+TableLayoutTogglePlugin::make()
+    ->enableAutoMobileLayout() // pass false to disable
+```
+
+**Standalone tables (configuration file):**
+
+```php
+'auto_mobile_layout' => true,
+```
 
 
 <a name="configuration_per_table_settings"></a>
